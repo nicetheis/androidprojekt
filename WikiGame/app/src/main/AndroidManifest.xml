@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WikiGame">
         <activity
+            android:name=".GameOverActivity"
+            android:exported="true" />
+        <activity
+            android:name=".InitActivity"
+            android:exported="true" />
+        <activity
+            android:name=".HigherLowerActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
