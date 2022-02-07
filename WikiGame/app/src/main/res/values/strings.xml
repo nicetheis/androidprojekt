@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WikiGame</string>
+    <string name="game_over">Game Over!</string>
+    <string name="score">Dein Score:</string>
+    <string name="top_scores">Deine Top Scores:</string>
+    <string name="neustart">Restart</string>
 </resources>
