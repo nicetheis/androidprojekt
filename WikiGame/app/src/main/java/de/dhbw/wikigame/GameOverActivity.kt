@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import de.dhbw.wikigame.database.Database
 import de.dhbw.wikigame.databinding.ActivityGameOverBinding
 import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreAdapter
@@ -19,7 +21,21 @@ class GameOverActivity : AppCompatActivity() {
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fillScores()
+        //Datenbank stuff
+        val db = Room.databaseBuilder(this, Database::class.java, "highscores")
+            .allowMainThreadQueries()
+            .build()
+
+        val scoreDao = db.getHighscoreDao()
+
+        if(scoreDao.getAll().isEmpty()){
+            fillScores()
+            scoreList.forEach { score ->
+                scoreDao.insertOne(score)
+            }
+        } else {
+            scoreList.addAll(scoreDao.getAll())
+        }
 
         //Recyclerview stuff
         binding.rvScores.setLayoutManager(LinearLayoutManager(this, RecyclerView.VERTICAL, false))
