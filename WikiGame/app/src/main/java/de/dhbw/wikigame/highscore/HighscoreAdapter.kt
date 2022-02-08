@@ -1,4 +1,4 @@
-package de.dhbw.wikigame
+package de.dhbw.wikigame.highscore
 
 import android.content.Context
 import android.view.LayoutInflater

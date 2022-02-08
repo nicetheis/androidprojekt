@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.dhbw.wikigame.databinding.ActivityGameOverBinding
+import de.dhbw.wikigame.highscore.Highscore
+import de.dhbw.wikigame.highscore.HighscoreAdapter
 
 private lateinit var binding: ActivityGameOverBinding
 private val scoreList: MutableList<Highscore> = mutableListOf()
