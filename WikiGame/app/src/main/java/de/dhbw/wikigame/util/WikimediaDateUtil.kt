@@ -1,14 +1,13 @@
 package de.dhbw.wikigame.util
 
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DateUtil {
+class WikimediaDateUtil {
 
-    public fun getRequestFormattedDatePattern(): String {
+    public fun getGETRequestFormattedDatePattern(): String {
 
-        var currentDateMinusOneDay = LocalDateTime.now().minusDays(1)
+        var currentDateMinusOneDay = LocalDateTime.now().minusDays(2)
         var dateFormatPattern = DateTimeFormatter.ofPattern("yyyy/MM/dd")
         return currentDateMinusOneDay.format(dateFormatPattern)
 
