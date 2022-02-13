@@ -137,4 +137,17 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"/>
 
+    <ImageView
+        android:id="@+id/checkmark"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_checkmark"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/lowerButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
