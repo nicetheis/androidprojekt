@@ -51,6 +51,11 @@ class GameOverActivity : AppCompatActivity() {
         binding.rvScores.setLayoutManager(LinearLayoutManager(this, RecyclerView.VERTICAL, false))
         scoreAdapter = HighscoreAdapter(scoreList)
         binding.rvScores.setAdapter(scoreAdapter)
+
+        //RestartButton
+        binding.btnRestart.setOnClickListener {
+            finish()
+        }
     }
 
     //Menu stuff
