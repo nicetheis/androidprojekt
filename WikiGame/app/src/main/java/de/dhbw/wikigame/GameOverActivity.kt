@@ -42,7 +42,9 @@ class GameOverActivity : AppCompatActivity() {
                 scoreDao.insertOne(score)
             }
         } else {
-            scoreList.addAll(scoreDao.getAll())
+            if(scoreList.isEmpty()) {
+                scoreList.addAll(scoreDao.getAll())
+            }
         }
 
         //Recyclerview stuff
