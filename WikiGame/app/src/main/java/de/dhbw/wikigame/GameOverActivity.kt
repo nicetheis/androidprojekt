@@ -25,6 +25,10 @@ class GameOverActivity : AppCompatActivity() {
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Score aus Intent
+        val score = intent.getIntExtra("score", 0)
+        binding.tvScore.setText(score.toString())
+
         //Datenbank stuff
         val db = Room.databaseBuilder(this, Database::class.java, "highscores")
             .allowMainThreadQueries()
