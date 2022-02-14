@@ -1,7 +1,11 @@
 package de.dhbw.wikigame
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -41,6 +45,24 @@ class GameOverActivity : AppCompatActivity() {
         binding.rvScores.setLayoutManager(LinearLayoutManager(this, RecyclerView.VERTICAL, false))
         scoreAdapter = HighscoreAdapter(scoreList)
         binding.rvScores.setAdapter(scoreAdapter)
+    }
+
+    //Menu stuff
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.icHome -> {
+                //Nicht mit Intent --> Sonst Seite aufm Stack
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
 
