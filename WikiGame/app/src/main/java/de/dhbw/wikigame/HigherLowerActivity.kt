@@ -37,7 +37,7 @@ class HigherLowerActivity : AppCompatActivity() {
             if (isHigher()) {
                 increaseScore(scoreView, checkmark)
             } else {
-                gameOver()
+                gameOver(score)
             }
         }
 
@@ -45,7 +45,7 @@ class HigherLowerActivity : AppCompatActivity() {
             if (!isHigher()) {
                 increaseScore(scoreView, checkmark)
             } else {
-                gameOver()
+                gameOver(score)
             }
         }
     }
@@ -65,8 +65,10 @@ class HigherLowerActivity : AppCompatActivity() {
         }
     }
 
-    fun gameOver(){
+    fun gameOver(score: Int){
+        // navigate to GameOverActivity and send the score
         val intent = Intent(this, GameOverActivity::class.java)
+        intent.putExtra("score", score)
         startActivity(intent)
     }
 }
