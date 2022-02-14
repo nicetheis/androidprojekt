@@ -51,6 +51,7 @@ class GameOverActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
+        menu.findItem(R.id.icHome).setVisible(true)
         return true
     }
 
