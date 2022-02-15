@@ -32,6 +32,8 @@ class GameOverActivity : AppCompatActivity() {
         val score = intent.getIntExtra("score", 0)
         binding.tvScore.setText(score.toString())
 
+        val scoreToInsert = Highscore("Theresa", score)
+
         //Datenbank stuff
         val db = Room.databaseBuilder(this, Database::class.java, "highscores")
             .allowMainThreadQueries()
@@ -40,15 +42,16 @@ class GameOverActivity : AppCompatActivity() {
         val scoreDao = db.getHighscoreDao()
 
         if(scoreDao.getAll().isEmpty()){
-            fillScores()
-            scoreList.forEach { score ->
-                scoreDao.insertOne(score)
-            }
+            scoreDao.insertOne(scoreToInsert)
+            scoreList.add(scoreToInsert)
+            Toast.makeText(this, R.string.score_gespeichert, Toast.LENGTH_SHORT).show()
         } else {
-            if(scoreList.isEmpty()) {
-                scoreList.addAll(scoreDao.getAll())
-                binding.btnDelete.isVisible = true
-            }
+            scoreDao.insertOne(scoreToInsert)
+            scoreList.removeAll(scoreList)
+            scoreList.addAll(scoreDao.getAll())
+            Toast.makeText(this, R.string.score_gespeichert, Toast.LENGTH_SHORT).show()
+
+            //ToDo: ParentActivities festlegen!
         }
 
         //Recyclerview stuff
@@ -91,17 +94,4 @@ class GameOverActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-}
-
-private fun fillScores() {
-    scoreList.addAll(
-        listOf(
-            Highscore("Theresa", 999),
-            Highscore("Theresa2", 872),
-            Highscore("Theresa3", 736),
-            Highscore("Markus", 0),
-            Highscore("Florian", 0),
-            Highscore("Max", -999)
-        )
-    )
 }

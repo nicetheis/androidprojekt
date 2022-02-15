@@ -5,5 +5,6 @@
     <string name="top_scores">Deine Top Scores:</string>
     <string name="neustart">Restart</string>
     <string name="delete">Löschen</string>
-    <string name="delete_info">Highscores gelöscht!</string>
+    <string name="delete_info">Highscores gelöscht...</string>
+    <string name="score_gespeichert">Highscore gespeichert</string>
 </resources>
