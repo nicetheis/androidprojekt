@@ -86,7 +86,9 @@ class HigherLowerActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.icHome -> {
-                finish()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

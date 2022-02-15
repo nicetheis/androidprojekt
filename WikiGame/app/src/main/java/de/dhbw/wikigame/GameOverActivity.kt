@@ -50,8 +50,6 @@ class GameOverActivity : AppCompatActivity() {
             scoreList.removeAll(scoreList)
             scoreList.addAll(scoreDao.getAll())
             Toast.makeText(this, R.string.score_gespeichert, Toast.LENGTH_SHORT).show()
-
-            //ToDo: ParentActivities festlegen!
         }
 
         //Recyclerview stuff
@@ -87,8 +85,10 @@ class GameOverActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.icHome -> {
-                //Nicht mit Intent --> Sonst Seite aufm Stack
-                finish()
+                val intent = Intent(this, MainActivity::class.java)
+                //Flag: Geht zur MainActivity, löscht andere Stack seiten
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
