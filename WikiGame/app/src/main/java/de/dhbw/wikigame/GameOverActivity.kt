@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -13,6 +15,7 @@ import de.dhbw.wikigame.database.Database
 import de.dhbw.wikigame.databinding.ActivityGameOverBinding
 import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreAdapter
+import okhttp3.internal.notify
 
 private lateinit var binding: ActivityGameOverBinding
 private val scoreList: MutableList<Highscore> = mutableListOf()
@@ -44,6 +47,7 @@ class GameOverActivity : AppCompatActivity() {
         } else {
             if(scoreList.isEmpty()) {
                 scoreList.addAll(scoreDao.getAll())
+                binding.btnDelete.isVisible = true
             }
         }
 
@@ -55,6 +59,16 @@ class GameOverActivity : AppCompatActivity() {
         //RestartButton
         binding.btnRestart.setOnClickListener {
             finish()
+        }
+
+        binding.btnDelete.setOnClickListener {
+            if(!scoreList.isEmpty()){
+                scoreDao.deleteAll()
+                scoreList.removeAll(scoreList)
+                scoreAdapter.notifyDataSetChanged()
+                Toast.makeText(this, R.string.delete_info, Toast.LENGTH_LONG).show()
+                binding.btnDelete.isVisible = false
+            }
         }
     }
 
