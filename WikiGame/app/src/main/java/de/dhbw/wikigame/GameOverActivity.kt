@@ -68,6 +68,7 @@ class GameOverActivity : AppCompatActivity() {
                 scoreAdapter.notifyDataSetChanged()
                 Toast.makeText(this, R.string.delete_info, Toast.LENGTH_LONG).show()
                 binding.btnDelete.isVisible = false
+                binding.tvRanking.setText(R.string.delete_info)
             }
         }
     }
