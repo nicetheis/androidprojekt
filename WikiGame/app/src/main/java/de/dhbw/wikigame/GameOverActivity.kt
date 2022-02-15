@@ -48,7 +48,7 @@ class GameOverActivity : AppCompatActivity() {
         } else {
             scoreDao.insertOne(scoreToInsert)
             scoreList.removeAll(scoreList)
-            scoreList.addAll(scoreDao.getAll())
+            scoreList.addAll(scoreDao.getAllSortedDESC())
             Toast.makeText(this, R.string.score_gespeichert, Toast.LENGTH_SHORT).show()
         }
 

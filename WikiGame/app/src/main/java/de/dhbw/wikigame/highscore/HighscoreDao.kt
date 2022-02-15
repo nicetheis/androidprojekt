@@ -10,6 +10,9 @@ interface HighscoreDao {
     @Query("Select * from highscores")
     fun getAll(): List<Highscore>
 
+    @Query("Select * from highscores order by score desc")
+    fun getAllSortedDESC(): List<Highscore>
+
     @Query("Select * from highscores limit 5")
     fun getTopFive(): List<Highscore>
 
