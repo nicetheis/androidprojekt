@@ -1,4 +1,4 @@
-package de.dhbw.wikigame.api.wikimediadatatypes
+package de.dhbw.wikigame.api.wikimedia.datatypes
 
 class WikimediaArticleStatistics(
     val article: String,
