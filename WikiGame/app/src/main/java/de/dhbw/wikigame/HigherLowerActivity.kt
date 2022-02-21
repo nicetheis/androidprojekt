@@ -32,8 +32,8 @@ class HigherLowerActivity : AppCompatActivity() {
 
         val wikimediaStatsInterface: WikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
 
-        val article1 = wikimediaStatsInterface.getRandomWikiArticle()
-        val article2 = wikimediaStatsInterface.getRandomWikiArticle()
+        var article1 = wikimediaStatsInterface.getRandomWikiArticle()
+        var article2 = wikimediaStatsInterface.getRandomWikiArticle()
 
         val scoreView = findViewById<TextView>(R.id.scoreValue)
         val higherBtn = findViewById<Button>(R.id.higherButton)
@@ -72,13 +72,10 @@ class HigherLowerActivity : AppCompatActivity() {
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article1!!.article, viewModel.currentFirstArticleThumbnailURL)
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article2!!.article, viewModel.currentSecondArticleThumbnailURL)
 
+
+
         higherBtn.setOnClickListener {
-
-            Picasso.get()
-                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Al-Farabi.jpg/80px-Al-Farabi.jpg")
-                .into(thumb1)
-
-            if (isHigher()) {
+            if (article1!!.views < article2!!.views) {
                 increaseScore(scoreView, checkmark)
             } else {
                 gameOver(score)
@@ -86,18 +83,12 @@ class HigherLowerActivity : AppCompatActivity() {
         }
 
         lowerBtn.setOnClickListener {
-            if (!isHigher()) {
+            if (article1!!.views > article2!!.views) {
                 increaseScore(scoreView, checkmark)
             } else {
                 gameOver(score)
             }
         }
-    }
-
-
-    fun isHigher(): Boolean {
-        //hier die Aufrufzahlen beider Werte vergleichen
-        return true
     }
 
     fun increaseScore(scoreView: TextView, checkmark: ImageView) {
