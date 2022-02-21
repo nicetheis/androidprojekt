@@ -24,7 +24,6 @@ private lateinit var article1: WikimediaArticleStatistics
 private lateinit var article2: WikimediaArticleStatistics
 private lateinit var wikimediaStatsInterface: WikimediaStatsInterface
 private var isTimeMode = false
-private var timer: Int = 6
 private var score: Int = 0
 private var timerLiveData: MutableLiveData<Int> = MutableLiveData(6)
 private var isGameOver = false
