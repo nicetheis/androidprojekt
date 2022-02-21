@@ -34,6 +34,12 @@ class InitActivity : AppCompatActivity() {
                 putBoolean("time", swTime)
                 apply()
             }
+            gameStart()
         }
+    }
+
+    private fun gameStart() {
+        val intent = Intent(this, HigherLowerActivity::class.java)
+        startActivity(intent)
     }
 }
