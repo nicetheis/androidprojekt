@@ -3,6 +3,10 @@ package de.dhbw.wikigame
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -79,7 +83,7 @@ class HigherLowerActivity : AppCompatActivity() {
             if (isHigher()) {
                 increaseScore(scoreView, checkmark)
             } else {
-                gameOver()
+                gameOver(score)
             }
         }
 
@@ -87,7 +91,7 @@ class HigherLowerActivity : AppCompatActivity() {
             if (!isHigher()) {
                 increaseScore(scoreView, checkmark)
             } else {
-                gameOver()
+                gameOver(score)
             }
         }
     }
@@ -108,8 +112,31 @@ class HigherLowerActivity : AppCompatActivity() {
         }
     }
 
-    fun gameOver() {
+    fun gameOver(score: Int){
+        // navigate to GameOverActivity and send the score
         val intent = Intent(this, GameOverActivity::class.java)
+        intent.putExtra("score", score)
         startActivity(intent)
+        finish()
+    }
+
+    //Menu stuff
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        menu.findItem(R.id.icHome).setVisible(true)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.icHome -> {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
