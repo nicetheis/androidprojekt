@@ -34,11 +34,14 @@ class GameOverActivity : AppCompatActivity() {
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val name = sharedPref.getString("name", "player")
-        val scoreToInsert = Highscore(name!!, score)
+        val time = sharedPref.getBoolean("time", false)
+        val difficulty = sharedPref.getBoolean("difficulty", false)
+        val scoreToInsert = Highscore(name!!, score, time, difficulty)
 
         //Datenbank stuff
         val db = Room.databaseBuilder(this, Database::class.java, "highscores")
             .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
             .build()
 
         val scoreDao = db.getHighscoreDao()
