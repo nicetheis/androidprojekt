@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
         val button1 = findViewById<Button>(R.id.btnTestHigherLower)
         val button2 = findViewById<Button>(R.id.btnTestGameOverScreen)
+        val button3 = findViewById<Button>(R.id.btnTestInit)
 
         button1.setOnClickListener {
             val intent = Intent(this, HigherLowerActivity::class.java)
@@ -24,6 +25,11 @@ class MainActivity : AppCompatActivity() {
 
         button2.setOnClickListener{
             val intent = Intent(this, GameOverActivity::class.java)
+            startActivity(intent)
+        }
+
+        button3.setOnClickListener {
+            val intent = Intent(this, InitActivity::class.java)
             startActivity(intent)
         }
     }
