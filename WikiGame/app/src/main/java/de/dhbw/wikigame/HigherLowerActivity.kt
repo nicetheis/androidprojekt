@@ -45,8 +45,6 @@ class HigherLowerActivity : AppCompatActivity() {
         article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
         loadArticlesToView(article1, article2)
 
-
-
         //buttons
         binding.higherButton.setOnClickListener {
             if (article1!!.views < article2!!.views) {
@@ -111,11 +109,18 @@ class HigherLowerActivity : AppCompatActivity() {
     }
 
     fun gameOver(score: Int){
-        // navigate to GameOverActivity and send the score
+        //display red x and views of article2
+        binding.redx.visibility = View.VISIBLE
+        binding.viewCount2.text = article2!!.views.toString()
+
         val intent = Intent(this, GameOverActivity::class.java)
-        intent.putExtra("score", score)
-        startActivity(intent)
-        finish()
+        //wait 2 seconds
+        Timer("WaitTimer", false).schedule(2000){
+            //navigate to GameOverActivity and send the score
+            intent.putExtra("score", score)
+            startActivity(intent)
+            finish()
+        }
     }
 
     //Menu bar

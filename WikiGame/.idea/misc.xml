@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.5703125" />
+        <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/drawable/ic_checkmark.xml" value="0.4942708333333333" />
+        <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/drawable/ic_red_x.xml" value="0.4942708333333333" />
         <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/layout/activity_game_over.xml" value="0.483695652173913" />
         <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/layout/activity_higher_lower.xml" value="0.483695652173913" />
         <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/layout/activity_init.xml" value="0.483695652173913" />
