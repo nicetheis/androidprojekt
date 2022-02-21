@@ -27,6 +27,8 @@ class HighscoreAdapter(var scoreList: MutableList<Highscore>) : RecyclerView.Ada
         holder.binding.tvIndex.setText(index.toString() + ".")
         holder.binding.tvName.setText(score.name)
         holder.binding.tvPoints.setText(score.score.toString())
+        if(score.time) holder.binding.tvTime.setText("Zeit:  1") else holder.binding.tvTime.setText("Zeit: 0")
+        if(score.difficulty) holder.binding.tvLevel.setText("Leicht:  0") else holder.binding.tvLevel.setText("Leicht: 1")
 
     }
 }
