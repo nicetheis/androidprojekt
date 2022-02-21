@@ -35,6 +35,10 @@ class HigherLowerActivity : AppCompatActivity() {
         binding = ActivityHigherLowerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(HigherLowerActivityViewModel::class.java)
+
+        //set initial values
+        score = 0
+        timerLiveData = MutableLiveData(6)
         isGameOver = false
 
         //get data from wikipedia api
