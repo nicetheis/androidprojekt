@@ -2,6 +2,7 @@ package de.dhbw.wikigame.api.wikipedia.handlers.images
 
 import androidx.lifecycle.MutableLiveData
 import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.dhbw.wikigame.HigherLowerActivityViewModel
@@ -53,10 +54,16 @@ class ArticleThumbnailAPIHandler {
                     val responseBody: ResponseBody = response.body!!
                     val responseBodyContent: String = responseBody.string()
 
-                    var wikipediaQueryResult: WikipediaQueryResult =
-                        jsonAdapter.fromJson(responseBodyContent)!!
-                    val thumbURL = wikipediaQueryResult.query.pages[0].thumbnail.source
-                    println("now posting Value for article ${wikipediaQueryResult.query.pages[0].title} which has URL: $thumbURL")
+                    var thumbURL = ""
+
+                    thumbURL = try {
+                        var wikipediaQueryResult: WikipediaQueryResult =
+                            jsonAdapter.fromJson(responseBodyContent)!!
+                        wikipediaQueryResult.query.pages[0].thumbnail.source
+                    } catch (jsonDataException: JsonDataException) {
+                        "https://upload.wikimedia.org/wikipedia/commons/6/61/Wikipedia-logo-transparent.png"
+                    }
+
                     mutableData.postValue(thumbURL)
 
                 }
