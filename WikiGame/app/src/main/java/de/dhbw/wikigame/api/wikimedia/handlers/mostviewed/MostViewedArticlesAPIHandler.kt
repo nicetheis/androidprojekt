@@ -1,16 +1,24 @@
-package de.dhbw.wikigame.api.wikimediahandlers.mostviewed
+package de.dhbw.wikigame.api.wikimedia.handlers.mostviewed
 
+import android.content.SharedPreferences
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import de.dhbw.wikigame.api.wikimediadatatypes.WikimediaData
+import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaData
+import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.util.WikimediaDateUtil
 import okhttp3.*
 import java.io.IOException
+import java.io.Serializable
 
 class MostViewedArticlesAPIHandler {
 
     private val httpClient = OkHttpClient()
+    private var mostViewedArticlesJSONString: String? = null
+
+    init {
+        getMostViewedArticles()
+    }
 
     private fun getMostViewedArticlesRequestURL(): String {
 
@@ -21,7 +29,11 @@ class MostViewedArticlesAPIHandler {
 
     }
 
-    fun getMostViewedArticles() {
+    fun getMostViewedArticlesJSONString(): String {
+        return mostViewedArticlesJSONString!!
+    }
+
+    private fun getMostViewedArticles() {
 
         val requestURL = getMostViewedArticlesRequestURL()
         val articleRequest = Request.Builder()
@@ -45,9 +57,7 @@ class MostViewedArticlesAPIHandler {
                         moshiInstance.adapter(WikimediaData::class.java)
                     val responseBody: ResponseBody = response.body!!
                     val responseBodyContent: String = responseBody.string()
-                    var wikimediaData: WikimediaData = jsonAdapter.fromJson(responseBodyContent)!!
-
-                    // TODO: implement function return value -> some more work needed because get-request runs async, simple function return value therefore not possible.
+                    mostViewedArticlesJSONString = responseBodyContent
 
                 }
             }

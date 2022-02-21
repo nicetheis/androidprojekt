@@ -5,11 +5,11 @@ import java.time.format.DateTimeFormatter
 
 class WikimediaDateUtil {
 
-    public fun getGETRequestFormattedDatePattern(): String {
+    fun getGETRequestFormattedDatePattern(): String {
 
-        var currentDateMinusOneDay = LocalDateTime.now().minusDays(2)
+        var currentDateMinusTwoDays = LocalDateTime.now().minusDays(2)
         var dateFormatPattern = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-        return currentDateMinusOneDay.format(dateFormatPattern)
+        return currentDateMinusTwoDays.format(dateFormatPattern)
 
     }
 

@@ -1,4 +1,6 @@
-package de.dhbw.wikigame.api.wikimediadatatypes
+package de.dhbw.wikigame.api.wikimedia.datatypes
+
+import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 
 class WikimediaItem {
 
