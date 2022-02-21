@@ -72,8 +72,6 @@ class HigherLowerActivity : AppCompatActivity() {
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article1!!.article, viewModel.currentFirstArticleThumbnailURL)
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article2!!.article, viewModel.currentSecondArticleThumbnailURL)
 
-        // TODO: implement try-catch for wikipedia articles WITHOUT existing thumbnail
-
         higherBtn.setOnClickListener {
 
             Picasso.get()
