@@ -73,6 +73,7 @@ class HigherLowerActivity : AppCompatActivity() {
         val intent = Intent(this, GameOverActivity::class.java)
         intent.putExtra("score", score)
         startActivity(intent)
+        finish()
     }
 
     //Menu stuff
