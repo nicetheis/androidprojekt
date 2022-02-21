@@ -61,7 +61,9 @@ class GameOverActivity : AppCompatActivity() {
 
         //RestartButton
         binding.btnRestart.setOnClickListener {
-            finish()
+            val intent = Intent(this, InitActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
         }
 
         binding.btnDelete.setOnClickListener {
