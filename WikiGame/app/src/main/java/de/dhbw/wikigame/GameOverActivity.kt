@@ -64,7 +64,7 @@ class GameOverActivity : AppCompatActivity() {
 
         //RestartButton
         binding.btnRestart.setOnClickListener {
-            val intent = Intent(this, InitActivity::class.java)
+            val intent = Intent(this, HigherLowerActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
