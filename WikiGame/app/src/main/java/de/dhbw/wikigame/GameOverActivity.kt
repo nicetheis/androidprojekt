@@ -32,7 +32,9 @@ class GameOverActivity : AppCompatActivity() {
         val score = intent.getIntExtra("score", 0)
         binding.tvScore.setText(score.toString())
 
-        val scoreToInsert = Highscore("Theresa", score)
+        val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
+        val name = sharedPref.getString("name", "player")
+        val scoreToInsert = Highscore(name!!, score)
 
         //Datenbank stuff
         val db = Room.databaseBuilder(this, Database::class.java, "highscores")
