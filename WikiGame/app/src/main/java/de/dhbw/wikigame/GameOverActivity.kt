@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,11 +17,14 @@ import de.dhbw.wikigame.database.Database
 import de.dhbw.wikigame.databinding.ActivityGameOverBinding
 import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreAdapter
+import de.dhbw.wikigame.highscore.HighscoreDao
 import okhttp3.internal.notify
 
 private lateinit var binding: ActivityGameOverBinding
 private val scoreList: MutableList<Highscore> = mutableListOf()
 private lateinit var scoreAdapter: HighscoreAdapter
+private lateinit var db: Database
+private lateinit var scoreDao: HighscoreDao
 
 
 class GameOverActivity : AppCompatActivity() {
@@ -27,6 +32,9 @@ class GameOverActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.tvDBEmpty.isVisible = false
+        binding.tvDelete.isVisible = false
 
         //Score aus Intent
         val score = intent.getIntExtra("score", 0)
@@ -39,12 +47,12 @@ class GameOverActivity : AppCompatActivity() {
         val scoreToInsert = Highscore(name!!, score, time, difficulty)
 
         //Datenbank stuff
-        val db = Room.databaseBuilder(this, Database::class.java, "highscores")
+        db = Room.databaseBuilder(this, Database::class.java, "highscores")
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
 
-        val scoreDao = db.getHighscoreDao()
+        scoreDao = db.getHighscoreDao()
 
         if(scoreDao.getAll().isEmpty()){
             scoreDao.insertOne(scoreToInsert)
@@ -76,7 +84,10 @@ class GameOverActivity : AppCompatActivity() {
                 scoreAdapter.notifyDataSetChanged()
                 Toast.makeText(this, R.string.delete_info, Toast.LENGTH_LONG).show()
                 binding.btnDelete.isVisible = false
-                binding.tvRanking.setText(R.string.delete_info)
+                binding.radioGroup.isVisible = false
+                binding.tvDBEmpty.isVisible = true
+                binding.tvRanking.isVisible = false
+                binding.tvDelete.isVisible = true
             }
         }
     }
@@ -101,4 +112,39 @@ class GameOverActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun onRadioButtonClicked(view: View) {
+        if (view is RadioButton) {
+            // Is the button now checked?
+            val checked = view.isChecked
+            // Check which radio button was clicked
+            when (view.getId()) {
+                R.id.radioAll ->
+                    if (checked) {
+                        scoreList.removeAll(scoreList)
+                        scoreList.addAll(scoreDao.getAllSortedDESC())
+                        scoreAdapter.notifyDataSetChanged()
+                    }
+                R.id.radioTime ->
+                    if (checked) {
+                        scoreList.removeAll(scoreList)
+                        scoreList.addAll(scoreDao.getAllForTimeSortedDESC())
+                        scoreAdapter.notifyDataSetChanged()
+                    }
+                R.id.radioEasy ->
+                    if (checked) {
+                        scoreList.removeAll(scoreList)
+                        scoreList.addAll(scoreDao.getAllForEasySortedDESC())
+                        scoreAdapter.notifyDataSetChanged()
+                    }
+                R.id.radioHeavy ->
+                    if (checked) {
+                        scoreList.removeAll(scoreList)
+                        scoreList.addAll(scoreDao.getAllForHeavySortedDESC())
+                        scoreAdapter.notifyDataSetChanged()
+                    }
+            }
+        }
+    }
+
 }
