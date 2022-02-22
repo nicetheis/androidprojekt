@@ -12,4 +12,5 @@
     <string name="leicht">Leicht</string>
     <string name="schwer">Schwer</string>
     <string name="no_data">Keine Daten vorhanden</string>
+    <string name="nicht_getestet">Scheint so,\n als hättest du diesen Modus noch nicht getestet!</string>
 </resources>

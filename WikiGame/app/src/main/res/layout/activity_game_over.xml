@@ -159,6 +159,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
+    <TextView
+        android:id="@+id/tvNotPlayed"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/nicht_getestet"
+        android:gravity="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnRestart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
     <Button
         android:id="@+id/btnRestart"
         android:layout_width="wrap_content"

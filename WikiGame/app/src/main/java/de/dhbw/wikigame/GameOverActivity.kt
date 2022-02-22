@@ -35,6 +35,7 @@ class GameOverActivity : AppCompatActivity() {
 
         binding.tvDBEmpty.isVisible = false
         binding.tvDelete.isVisible = false
+        binding.tvNotPlayed.isVisible = false
 
         //Score aus Intent
         val score = intent.getIntExtra("score", 0)
@@ -121,30 +122,35 @@ class GameOverActivity : AppCompatActivity() {
             when (view.getId()) {
                 R.id.radioAll ->
                     if (checked) {
-                        scoreList.removeAll(scoreList)
-                        scoreList.addAll(scoreDao.getAllSortedDESC())
-                        scoreAdapter.notifyDataSetChanged()
+                        getData(scoreDao.getAllSortedDESC())
                     }
                 R.id.radioTime ->
                     if (checked) {
-                        scoreList.removeAll(scoreList)
-                        scoreList.addAll(scoreDao.getAllForTimeSortedDESC())
-                        scoreAdapter.notifyDataSetChanged()
+                        getData(scoreDao.getAllForTimeSortedDESC())
                     }
                 R.id.radioEasy ->
                     if (checked) {
-                        scoreList.removeAll(scoreList)
-                        scoreList.addAll(scoreDao.getAllForEasySortedDESC())
-                        scoreAdapter.notifyDataSetChanged()
+                        getData(scoreDao.getAllForEasySortedDESC())
                     }
                 R.id.radioHeavy ->
                     if (checked) {
-                        scoreList.removeAll(scoreList)
-                        scoreList.addAll(scoreDao.getAllForHeavySortedDESC())
-                        scoreAdapter.notifyDataSetChanged()
+                        getData(scoreDao.getAllForHeavySortedDESC())
                     }
             }
         }
+    }
+
+    fun getData(scoreListElements: List<Highscore>){
+        scoreList.removeAll(scoreList)
+        scoreList.addAll(scoreListElements)
+        if(scoreList.isEmpty()){
+            binding.rvScores.isVisible = false
+            binding.tvNotPlayed.isVisible = true
+        } else {
+            binding.tvNotPlayed.isVisible = false
+            binding.rvScores.isVisible = true
+        }
+        scoreAdapter.notifyDataSetChanged()
     }
 
 }
