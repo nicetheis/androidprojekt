@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 import de.dhbw.wikigame.databinding.ActivityInitBinding
 
 private lateinit var binding: ActivityInitBinding
@@ -20,6 +21,9 @@ class InitActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityInitBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
+            MostViewedArticlesAPIHandler()
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
@@ -35,12 +39,12 @@ class InitActivity : AppCompatActivity() {
                 putBoolean("time", swTime)
                 apply()
             }
-            gameStart()
+            val intent = Intent(this, HigherLowerActivity::class.java)
+            intent.putExtra(
+                "mostViewedArticlesJSONString",
+                mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
+            )
+            startActivity(intent)
         }
-    }
-
-    private fun gameStart() {
-        val intent = Intent(this, HigherLowerActivity::class.java)
-        startActivity(intent)
     }
 }
