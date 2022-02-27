@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,11 +17,14 @@ import de.dhbw.wikigame.database.Database
 import de.dhbw.wikigame.databinding.ActivityGameOverBinding
 import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreAdapter
+import de.dhbw.wikigame.highscore.HighscoreDao
 import okhttp3.internal.notify
 
 private lateinit var binding: ActivityGameOverBinding
 private val scoreList: MutableList<Highscore> = mutableListOf()
 private lateinit var scoreAdapter: HighscoreAdapter
+private lateinit var db: Database
+private lateinit var scoreDao: HighscoreDao
 
 
 class GameOverActivity : AppCompatActivity() {
@@ -28,18 +33,27 @@ class GameOverActivity : AppCompatActivity() {
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.tvDBEmpty.isVisible = false
+        binding.tvDelete.isVisible = false
+        binding.tvNotPlayed.isVisible = false
+
         //Score aus Intent
         val score = intent.getIntExtra("score", 0)
         binding.tvScore.setText(score.toString())
 
-        val scoreToInsert = Highscore("Theresa", score)
+        val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
+        val name = sharedPref.getString("name", "player")
+        val time = sharedPref.getBoolean("time", false)
+        val difficulty = sharedPref.getBoolean("difficulty", false)
+        val scoreToInsert = Highscore(name!!, score, time, difficulty)
 
         //Datenbank stuff
-        val db = Room.databaseBuilder(this, Database::class.java, "highscores")
+        db = Room.databaseBuilder(this, Database::class.java, "highscores")
             .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
             .build()
 
-        val scoreDao = db.getHighscoreDao()
+        scoreDao = db.getHighscoreDao()
 
         if(scoreDao.getAll().isEmpty()){
             scoreDao.insertOne(scoreToInsert)
@@ -59,7 +73,9 @@ class GameOverActivity : AppCompatActivity() {
 
         //RestartButton
         binding.btnRestart.setOnClickListener {
-            finish()
+            val intent = Intent(this, HigherLowerActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
         }
 
         binding.btnDelete.setOnClickListener {
@@ -69,7 +85,10 @@ class GameOverActivity : AppCompatActivity() {
                 scoreAdapter.notifyDataSetChanged()
                 Toast.makeText(this, R.string.delete_info, Toast.LENGTH_LONG).show()
                 binding.btnDelete.isVisible = false
-                binding.tvRanking.setText(R.string.delete_info)
+                binding.radioGroup.isVisible = false
+                binding.tvDBEmpty.isVisible = true
+                binding.tvRanking.isVisible = false
+                binding.tvDelete.isVisible = true
             }
         }
     }
@@ -94,4 +113,44 @@ class GameOverActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun onRadioButtonClicked(view: View) {
+        if (view is RadioButton) {
+            // Is the button now checked?
+            val checked = view.isChecked
+            // Check which radio button was clicked
+            when (view.getId()) {
+                R.id.radioAll ->
+                    if (checked) {
+                        getData(scoreDao.getAllSortedDESC())
+                    }
+                R.id.radioTime ->
+                    if (checked) {
+                        getData(scoreDao.getAllForTimeSortedDESC())
+                    }
+                R.id.radioEasy ->
+                    if (checked) {
+                        getData(scoreDao.getAllForEasySortedDESC())
+                    }
+                R.id.radioHeavy ->
+                    if (checked) {
+                        getData(scoreDao.getAllForHeavySortedDESC())
+                    }
+            }
+        }
+    }
+
+    fun getData(scoreListElements: List<Highscore>){
+        scoreList.removeAll(scoreList)
+        scoreList.addAll(scoreListElements)
+        if(scoreList.isEmpty()){
+            binding.rvScores.isVisible = false
+            binding.tvNotPlayed.isVisible = true
+        } else {
+            binding.tvNotPlayed.isVisible = false
+            binding.rvScores.isVisible = true
+        }
+        scoreAdapter.notifyDataSetChanged()
+    }
+
 }

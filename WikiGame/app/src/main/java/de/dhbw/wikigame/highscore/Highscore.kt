@@ -9,7 +9,12 @@ data class Highscore(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "score")
-    var score: Int
+    var score: Int,
+    @ColumnInfo(name = "time")
+    var time: Boolean,
+    @ColumnInfo(name = "difficulty")
+    var difficulty: Boolean,
+
 ){
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

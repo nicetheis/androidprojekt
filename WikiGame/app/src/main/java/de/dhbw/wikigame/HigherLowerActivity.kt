@@ -3,123 +3,191 @@ package de.dhbw.wikigame
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
+import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
+import de.dhbw.wikigame.databinding.ActivityHigherLowerBinding
 import java.util.*
 import kotlin.concurrent.schedule
 
-class HigherLowerActivity : AppCompatActivity() {
-    var score = 0
+private lateinit var binding: ActivityHigherLowerBinding
+private lateinit var viewModel: HigherLowerActivityViewModel
+private lateinit var article1: WikimediaArticleStatistics
+private lateinit var article2: WikimediaArticleStatistics
+private lateinit var wikimediaStatsInterface: WikimediaStatsInterface
+private var isTimeMode = false
+private var isHighDifficulty = false
+private var isUpperBound = true
+private var score: Int = 0
+private var timerLiveData: MutableLiveData<Int> = MutableLiveData(6)
+private var isGameOver = false
 
-    lateinit var viewModel: HigherLowerActivityViewModel
+class HigherLowerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_higher_lower)
-
-        val mostViewedArticlesJSONString: String = intent.getStringExtra("mostViewedArticlesJSONString")!!
-
-        val wikimediaStatsInterface: WikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
-
-        val article1 = wikimediaStatsInterface.getRandomWikiArticleUpperBound()
-        val article2 = wikimediaStatsInterface.getRandomWikiArticleLowerBound()
-
-        val scoreView = findViewById<TextView>(R.id.scoreValue)
-        val higherBtn = findViewById<Button>(R.id.higherButton)
-        val lowerBtn = findViewById<Button>(R.id.lowerButton)
-        val thumb1 = findViewById<ImageView>(R.id.thumbnail1)
-        val thumb2 = findViewById<ImageView>(R.id.thumbnail2)
-        val lable1 = findViewById<TextView>(R.id.lable1)
-        val lable2 = findViewById<TextView>(R.id.lable2)
-        val checkmark = findViewById<ImageView>(R.id.checkmark)
-        val viewCount = findViewById<TextView>(R.id.viewCount1)
-
+        binding = ActivityHigherLowerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(HigherLowerActivityViewModel::class.java)
 
-        viewModel.currentFirstArticleThumbnailURL.observe(this, Observer{
+        //set initial values
+        score = 0
+        timerLiveData = MutableLiveData(6)
+        isGameOver = false
 
+        //handle gamemodes
+        val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
+        //timed mode
+        isTimeMode = sharedPref.getBoolean("time", false)
+        isHighDifficulty = sharedPref.getBoolean("difficulty", false)
+
+        //get data from wikipedia api
+        val mostViewedArticlesJSONString: String =
+            intent.getStringExtra("mostViewedArticlesJSONString")!!
+        wikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
+
+        //initialize game with first two articles
+        if(isHighDifficulty){
+            article1 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+            article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+        } else {
+            article1 = (wikimediaStatsInterface.getRandomWikiArticleUpperBound())!!
+            article2 = (wikimediaStatsInterface.getRandomWikiArticleLowerBound())!!
+        }
+
+        loadArticlesToView(article1, article2)
+
+        //buttons
+        binding.higherButton.setOnClickListener {
+            if (article1!!.views < article2!!.views) {
+                increaseScore()
+                displayCheckmark()
+                showNewArticles()
+                if (isTimeMode) timerLiveData.postValue(5)
+            } else gameOver()
+        }
+        binding.lowerButton.setOnClickListener {
+            if (article1!!.views > article2!!.views) {
+                increaseScore()
+                displayCheckmark()
+                showNewArticles()
+                if (isTimeMode) timerLiveData.postValue(5)
+            } else gameOver()
+        }
+
+
+        if (isTimeMode) {
+            timerLiveData.value = 6
+            binding.timerText.visibility = View.VISIBLE
+            binding.timerValue.visibility = View.VISIBLE
+            binding.timerValue.text = timerLiveData.value.toString()
+            timerLiveData.observe(this, Observer {
+                binding.timerValue.text = timerLiveData.value.toString()
+                if(!isGameOver && timerLiveData.value!! == 0) {
+                    binding.timerValue.visibility = View.INVISIBLE
+                    binding.timeIsUp.visibility = View.VISIBLE
+                    gameOver()
+                }
+            })
+            decrementTimer()
+        }
+    }
+
+    //game logic
+    fun increaseScore() {
+        score++
+        binding.scoreValue.text = score.toString()
+    }
+
+    fun displayCheckmark() {
+        //display checkmark for 0.5s
+        binding.checkmark.visibility = View.VISIBLE
+        Timer("CheckMarkTimer", false).schedule(500) {
+            binding.checkmark.visibility = View.INVISIBLE
+        }
+    }
+
+    fun showNewArticles() {
+        article1 = article2
+        if(isHighDifficulty){
+            article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+        } else {
+            if(isUpperBound){
+                article2 = (wikimediaStatsInterface.getRandomWikiArticleUpperBound())!!
+            } else {
+                article2 = (wikimediaStatsInterface.getRandomWikiArticleLowerBound())!!
+            }
+        }
+        loadArticlesToView(article1, article2)
+    }
+
+    fun loadArticlesToView(
+        article1: WikimediaArticleStatistics?,
+        article2: WikimediaArticleStatistics?
+    ) {
+        viewModel.currentFirstArticleThumbnailURL.observe(this, Observer {
             println("observe thumb1: ${viewModel.currentFirstArticleThumbnailURL.value}")
             Picasso.get()
                 .load(viewModel.currentFirstArticleThumbnailURL.value)
-                .into(thumb1)
-            lable1.text = article1!!.article.replace("_", " ")
-            viewCount.text = article1!!.views.toString()
-
+                .into(binding.thumbnail1)
+            binding.lable1.text = article1!!.article.replace("_", " ")
+            binding.viewCount1.text = article1!!.views.toString()
         })
-
-        viewModel.currentSecondArticleThumbnailURL.observe(this, Observer{
-
+        viewModel.currentSecondArticleThumbnailURL.observe(this, Observer {
             println("observe thumb2: ${viewModel.currentSecondArticleThumbnailURL.value}")
             Picasso.get()
                 .load(viewModel.currentSecondArticleThumbnailURL.value)
-                .into(thumb2)
-            lable2.text = article2!!.article.replace("_", " ")
+                .into(binding.thumbnail2)
+            binding.lable2.text = article2!!.article.replace("_", " ")
         })
-
-
+        //handle loading thumbnails
         val articleThumbnailAPIHandler = ArticleThumbnailAPIHandler()
-        articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article1!!.article, viewModel.currentFirstArticleThumbnailURL)
-        articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article2!!.article, viewModel.currentSecondArticleThumbnailURL)
-
-
-        higherBtn.setOnClickListener {
-
-            Picasso.get()
-                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Al-Farabi.jpg/80px-Al-Farabi.jpg")
-                .into(thumb1)
-
-            if (isHigher()) {
-                increaseScore(scoreView, checkmark)
-            } else {
-                gameOver(score)
-            }
-        }
-
-        lowerBtn.setOnClickListener {
-            if (!isHigher()) {
-                increaseScore(scoreView, checkmark)
-            } else {
-                gameOver(score)
-            }
-        }
+        articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(
+            article1!!.article,
+            viewModel.currentFirstArticleThumbnailURL
+        )
+        articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(
+            article2!!.article,
+            viewModel.currentSecondArticleThumbnailURL
+        )
     }
 
+    fun gameOver() {
+        isGameOver = true
 
-    fun isHigher(): Boolean {
-        //hier die Aufrufzahlen beider Werte vergleichen
-        return true
-    }
+        //display red x and views of article2
+        binding.redx.visibility = View.VISIBLE
+        binding.viewCount2.text = article2!!.views.toString()
 
-    fun increaseScore(scoreView: TextView, checkmark: ImageView) {
-        score++
-        scoreView.text = score.toString()
-        checkmark.visibility = View.VISIBLE
-
-        Timer("CheckMarkTimer", false).schedule(500) {
-            checkmark.visibility = View.INVISIBLE
-        }
-    }
-
-    fun gameOver(score: Int){
-        // navigate to GameOverActivity and send the score
         val intent = Intent(this, GameOverActivity::class.java)
-        intent.putExtra("score", score)
-        startActivity(intent)
-        finish()
+        //wait 2 seconds
+        Timer("WaitGameOverTimer", false).schedule(2000) {
+            //navigate to GameOverActivity and send the score
+            intent.putExtra("score", score)
+            startActivity(intent)
+            finish()
+        }
     }
 
-    //Menu stuff
+    //timed mode
+    fun decrementTimer() {
+        if(timerLiveData.value!! > 0) {
+            timerLiveData.value?.let { value -> timerLiveData.postValue(value - 1) }
+            Timer("WaitTimer", false).schedule(1000) {
+                decrementTimer()
+            }
+        }
+    }
+
+    //Menu bar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
