@@ -32,8 +32,8 @@ class HigherLowerActivity : AppCompatActivity() {
 
         val wikimediaStatsInterface: WikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
 
-        val article1 = wikimediaStatsInterface.getRandomWikiArticle()
-        val article2 = wikimediaStatsInterface.getRandomWikiArticle()
+        val article1 = wikimediaStatsInterface.getRandomWikiArticleUpperBound()
+        val article2 = wikimediaStatsInterface.getRandomWikiArticleLowerBound()
 
         val scoreView = findViewById<TextView>(R.id.scoreValue)
         val higherBtn = findViewById<Button>(R.id.higherButton)
@@ -53,7 +53,7 @@ class HigherLowerActivity : AppCompatActivity() {
             Picasso.get()
                 .load(viewModel.currentFirstArticleThumbnailURL.value)
                 .into(thumb1)
-            lable1.text = article1!!.article
+            lable1.text = article1!!.article.replace("_", " ")
             viewCount.text = article1!!.views.toString()
 
         })
@@ -64,15 +64,14 @@ class HigherLowerActivity : AppCompatActivity() {
             Picasso.get()
                 .load(viewModel.currentSecondArticleThumbnailURL.value)
                 .into(thumb2)
-            lable2.text = article2!!.article
+            lable2.text = article2!!.article.replace("_", " ")
         })
 
 
-        val articleThumbnailAPIHandler: ArticleThumbnailAPIHandler = ArticleThumbnailAPIHandler()
+        val articleThumbnailAPIHandler = ArticleThumbnailAPIHandler()
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article1!!.article, viewModel.currentFirstArticleThumbnailURL)
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(article2!!.article, viewModel.currentSecondArticleThumbnailURL)
 
-        // TODO: implement try-catch for wikipedia articles WITHOUT existing thumbnail
 
         higherBtn.setOnClickListener {
 

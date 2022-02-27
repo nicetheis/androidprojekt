@@ -59,5 +59,47 @@ class WikimediaStatsInterface(
 
     }
 
+    fun getRandomWikiArticleUpperBound(): WikimediaArticleStatistics? {
+
+        val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null;
+
+        var itemFound = false
+        var randomArticleFound: WikimediaArticleStatistics? = null
+
+        while (!itemFound) {
+            val randomIndex = Random.nextInt(500, 999)
+            val currentRandomArticle = wikipediaArticleList[randomIndex]
+            if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
+                itemFound = true
+                randomArticleFound = currentRandomArticle
+                wikipediaArticlesShown!!.plus(randomArticleFound)
+            }
+        }
+
+        return randomArticleFound
+
+    }
+
+    fun getRandomWikiArticleLowerBound(): WikimediaArticleStatistics? {
+
+        val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null;
+
+        var itemFound = false
+        var randomArticleFound: WikimediaArticleStatistics? = null
+
+        while (!itemFound) {
+            val randomIndex = Random.nextInt(0, 499)
+            val currentRandomArticle = wikipediaArticleList[randomIndex]
+            if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
+                itemFound = true
+                randomArticleFound = currentRandomArticle
+                wikipediaArticlesShown!!.plus(randomArticleFound)
+            }
+        }
+
+        return randomArticleFound
+
+    }
+
 
 }
