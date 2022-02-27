@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 import de.dhbw.wikigame.database.Database
 import de.dhbw.wikigame.databinding.ActivityGameOverBinding
 import de.dhbw.wikigame.highscore.Highscore
@@ -32,6 +33,9 @@ class GameOverActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        val mostViewedArticlesAPIHandler = MostViewedArticlesAPIHandler()
 
         binding.tvDBEmpty.isVisible = false
         binding.tvDelete.isVisible = false
@@ -74,6 +78,10 @@ class GameOverActivity : AppCompatActivity() {
         //RestartButton
         binding.btnRestart.setOnClickListener {
             val intent = Intent(this, HigherLowerActivity::class.java)
+            intent.putExtra(
+                "mostViewedArticlesJSONString",
+                mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
+            )
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
