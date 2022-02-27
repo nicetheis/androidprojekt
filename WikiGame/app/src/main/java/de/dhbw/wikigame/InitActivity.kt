@@ -13,6 +13,15 @@ import android.widget.TextView
 import de.dhbw.wikigame.databinding.ActivityInitBinding
 import android.net.ConnectivityManager
 
+import android.text.TextUtils
+import android.widget.Toast
+
+
+
+
+
+
+
 
 
 
@@ -47,7 +56,12 @@ class InitActivity : AppCompatActivity() {
                 putBoolean("time", swTime)
                 apply()
             }
-            gameStart()
+
+            if (etName.trim() == ("")) {
+                Toast.makeText(applicationContext, "User name is empty", Toast.LENGTH_SHORT).show()
+            } else {
+                gameStart()
+            }
         }
     }
 
