@@ -18,14 +18,7 @@ import android.net.ConnectivityManager
 
 import android.text.TextUtils
 import android.widget.Toast
-
-
-
-
-
-
-
-
+import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 
 
 private lateinit var binding: ActivityInitBinding
@@ -36,6 +29,9 @@ class InitActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityInitBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
+            MostViewedArticlesAPIHandler()
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
@@ -63,14 +59,14 @@ class InitActivity : AppCompatActivity() {
             if (etName.trim() == ("")) {
                 Toast.makeText(applicationContext, "Bitte gib deinen Namen ein", Toast.LENGTH_SHORT).show()
             } else {
-                gameStart()
+                val intent = Intent(this, HigherLowerActivity::class.java)
+                intent.putExtra(
+                    "mostViewedArticlesJSONString",
+                    mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
+                )
+                startActivity(intent)
             }
         }
-    }
-
-    private fun gameStart() {
-        val intent = Intent(this, HigherLowerActivity::class.java)
-        startActivity(intent)
     }
 
     //Menu stuff
