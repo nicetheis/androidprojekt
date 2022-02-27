@@ -51,10 +51,6 @@ class MostViewedArticlesAPIHandler {
 
                     if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                    val moshiInstance: Moshi =
-                        Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-                    val jsonAdapter: JsonAdapter<WikimediaData> =
-                        moshiInstance.adapter(WikimediaData::class.java)
                     val responseBody: ResponseBody = response.body!!
                     val responseBodyContent: String = responseBody.string()
                     mostViewedArticlesJSONString = responseBodyContent
