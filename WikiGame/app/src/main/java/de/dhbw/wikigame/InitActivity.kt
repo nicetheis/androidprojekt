@@ -11,6 +11,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import de.dhbw.wikigame.databinding.ActivityInitBinding
+import android.net.ConnectivityManager
+
+
+
 
 private lateinit var binding: ActivityInitBinding
 
@@ -23,6 +27,14 @@ class InitActivity : AppCompatActivity() {
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
+
+        val letName = sharedPref.getString("name", null)
+        val lswDif = sharedPref.getBoolean("difficulty", false)
+        val lswTime = sharedPref.getBoolean("time", false)
+
+        binding.editTextPlayerName.setText(letName)
+        binding.switchDifficulty.isChecked = lswDif
+        binding.switchTime.isChecked = lswTime
 
         binding.buttonStart.setOnClickListener {
             val etName = binding.editTextPlayerName.text.toString()

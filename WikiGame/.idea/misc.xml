@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Florian/Documents/AndroidStudioProjects/androidprojekt/WikiGame/app/src/main/res/layout/activity_game_over.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/Florian/Documents/AndroidStudioProjects/androidprojekt/WikiGame/app/src/main/res/layout/activity_higher_lower.xml" value="0.2753623188405797" />
+        <entry key="..\:/Users/Florian/Documents/AndroidStudioProjects/androidprojekt/WikiGame/app/src/main/res/layout/activity_init.xml" value="0.25" />
+        <entry key="..\:/Users/Florian/Documents/AndroidStudioProjects/androidprojekt/WikiGame/app/src/main/res/layout/activity_main.xml" value="0.2753623188405797" />
         <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.5703125" />
         <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/drawable/ic_checkmark.xml" value="0.4942708333333333" />
         <entry key="..\:/repos/androidprojekt/WikiGame/app/src/main/res/drawable/ic_red_x.xml" value="0.4942708333333333" />
