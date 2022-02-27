@@ -58,7 +58,7 @@ class InitActivity : AppCompatActivity() {
             }
 
             if (etName.trim() == ("")) {
-                Toast.makeText(applicationContext, "User name is empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Bitte gib deinen Namen ein", Toast.LENGTH_SHORT).show()
             } else {
                 gameStart()
             }
