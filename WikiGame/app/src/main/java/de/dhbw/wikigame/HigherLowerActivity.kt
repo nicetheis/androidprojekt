@@ -24,6 +24,8 @@ private lateinit var article1: WikimediaArticleStatistics
 private lateinit var article2: WikimediaArticleStatistics
 private lateinit var wikimediaStatsInterface: WikimediaStatsInterface
 private var isTimeMode = false
+private var isHighDifficulty = false
+private var isUpperBound = true
 private var score: Int = 0
 private var timerLiveData: MutableLiveData<Int> = MutableLiveData(6)
 private var isGameOver = false
@@ -41,14 +43,26 @@ class HigherLowerActivity : AppCompatActivity() {
         timerLiveData = MutableLiveData(6)
         isGameOver = false
 
+        //handle gamemodes
+        val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
+        //timed mode
+        isTimeMode = sharedPref.getBoolean("time", false)
+        isHighDifficulty = sharedPref.getBoolean("difficulty", false)
+
         //get data from wikipedia api
         val mostViewedArticlesJSONString: String =
             intent.getStringExtra("mostViewedArticlesJSONString")!!
         wikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
 
         //initialize game with first two articles
-        article1 = (wikimediaStatsInterface.getRandomWikiArticle())!!
-        article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+        if(isHighDifficulty){
+            article1 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+            article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+        } else {
+            article1 = (wikimediaStatsInterface.getRandomWikiArticleUpperBound())!!
+            article2 = (wikimediaStatsInterface.getRandomWikiArticleLowerBound())!!
+        }
+
         loadArticlesToView(article1, article2)
 
         //buttons
@@ -69,10 +83,7 @@ class HigherLowerActivity : AppCompatActivity() {
             } else gameOver()
         }
 
-        //handle gamemodes
-        val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
-        //timed mode
-        isTimeMode = sharedPref.getBoolean("time", false)
+
         if (isTimeMode) {
             timerLiveData.value = 6
             binding.timerText.visibility = View.VISIBLE
@@ -106,7 +117,15 @@ class HigherLowerActivity : AppCompatActivity() {
 
     fun showNewArticles() {
         article1 = article2
-        article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+        if(isHighDifficulty){
+            article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+        } else {
+            if(isUpperBound){
+                article2 = (wikimediaStatsInterface.getRandomWikiArticleUpperBound())!!
+            } else {
+                article2 = (wikimediaStatsInterface.getRandomWikiArticleLowerBound())!!
+            }
+        }
         loadArticlesToView(article1, article2)
     }
 
@@ -119,7 +138,7 @@ class HigherLowerActivity : AppCompatActivity() {
             Picasso.get()
                 .load(viewModel.currentFirstArticleThumbnailURL.value)
                 .into(binding.thumbnail1)
-            binding.lable1.text = article1!!.article
+            binding.lable1.text = article1!!.article.replace("_", " ")
             binding.viewCount1.text = article1!!.views.toString()
         })
         viewModel.currentSecondArticleThumbnailURL.observe(this, Observer {
@@ -127,10 +146,10 @@ class HigherLowerActivity : AppCompatActivity() {
             Picasso.get()
                 .load(viewModel.currentSecondArticleThumbnailURL.value)
                 .into(binding.thumbnail2)
-            binding.lable2.text = article2!!.article
+            binding.lable2.text = article2!!.article.replace("_", " ")
         })
         //handle loading thumbnails
-        val articleThumbnailAPIHandler: ArticleThumbnailAPIHandler = ArticleThumbnailAPIHandler()
+        val articleThumbnailAPIHandler = ArticleThumbnailAPIHandler()
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(
             article1!!.article,
             viewModel.currentFirstArticleThumbnailURL
