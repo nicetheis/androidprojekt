@@ -30,6 +30,9 @@ class HighscoreAdapter(var scoreList: MutableList<Highscore>) : RecyclerView.Ada
         holder.binding.tvPoints.setText(score.score.toString())
         if(score.time) holder.binding.ivTime.setImageResource(R.drawable.ic_time) else holder.binding.ivTime.setImageResource(R.drawable.ic_no_time)
         if(score.difficulty) holder.binding.ivLevel.setImageResource(R.drawable.ic_heavy) else holder.binding.ivLevel.setImageResource(R.drawable.ic_easy)
+        if(score.country.equals("de")) holder.binding.ivCountry.setImageResource(R.drawable.germany)
+        else if(score.country.equals("f")) holder.binding.ivCountry.setImageResource(R.drawable.france)
+        else holder.binding.ivCountry.setImageResource(R.drawable.gb)
 
     }
 }
