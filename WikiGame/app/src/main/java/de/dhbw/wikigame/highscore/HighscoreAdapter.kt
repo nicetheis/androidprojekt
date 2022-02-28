@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import de.dhbw.wikigame.R
 import de.dhbw.wikigame.databinding.ScoreItemBinding
 
 class HighscoreAdapter(var scoreList: MutableList<Highscore>) : RecyclerView.Adapter<HighscoreAdapter.HighscoreViewHolder>(){
@@ -27,8 +28,8 @@ class HighscoreAdapter(var scoreList: MutableList<Highscore>) : RecyclerView.Ada
         holder.binding.tvIndex.setText(index.toString() + ".")
         holder.binding.tvName.setText(score.name)
         holder.binding.tvPoints.setText(score.score.toString())
-        if(score.time) holder.binding.tvTime.setText("Zeit:  1") else holder.binding.tvTime.setText("Zeit: 0")
-        if(score.difficulty) holder.binding.tvLevel.setText("Leicht:  0") else holder.binding.tvLevel.setText("Leicht: 1")
+        if(score.time) holder.binding.ivTime.setImageResource(R.drawable.ic_time) else holder.binding.ivTime.setImageResource(R.drawable.ic_no_time)
+        if(score.difficulty) holder.binding.ivLevel.setImageResource(R.drawable.ic_heavy) else holder.binding.ivLevel.setImageResource(R.drawable.ic_easy)
 
     }
 }
