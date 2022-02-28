@@ -14,6 +14,8 @@ data class Highscore(
     var time: Boolean,
     @ColumnInfo(name = "difficulty")
     var difficulty: Boolean,
+    @ColumnInfo(name = "country")
+    var country: String,
 
 ){
     @PrimaryKey(autoGenerate = true)
