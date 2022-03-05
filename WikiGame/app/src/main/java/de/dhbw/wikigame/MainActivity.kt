@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val currentWikiLanguage = WikipediaLanguage.ES;
+        val currentWikiLanguage = WikipediaLanguage.DE;
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
             MostViewedArticlesAPIHandler(currentWikiLanguage)
 
