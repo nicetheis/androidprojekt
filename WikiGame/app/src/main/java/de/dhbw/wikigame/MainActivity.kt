@@ -12,6 +12,7 @@ import android.widget.Button
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
+import de.dhbw.wikigame.util.WikipediaLanguage
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,8 +20,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val currentWikiLanguage = WikipediaLanguage.ES;
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler()
+            MostViewedArticlesAPIHandler(currentWikiLanguage)
 
 
         val button1 = findViewById<Button>(R.id.btnTestHigherLower)
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                 "mostViewedArticlesJSONString",
                 mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
             )
+            intent.putExtra("currentWikiLanguage", currentWikiLanguage);
             startActivity(intent)
         }
 

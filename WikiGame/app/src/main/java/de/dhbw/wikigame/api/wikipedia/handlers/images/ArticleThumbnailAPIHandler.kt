@@ -8,11 +8,12 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.dhbw.wikigame.HigherLowerActivityViewModel
 import de.dhbw.wikigame.api.wikipedia.datatypes.WikipediaQueryResult
 import de.dhbw.wikigame.api.wikipedia.datatypes.WikipediaThumbnail
+import de.dhbw.wikigame.util.WikipediaLanguage
 import okhttp3.*
 import java.io.IOException
 import java.net.URLEncoder
 
-class ArticleThumbnailAPIHandler {
+class ArticleThumbnailAPIHandler(val currentWikiLanguage: WikipediaLanguage) {
 
     private val httpClient = OkHttpClient()
 
@@ -20,7 +21,7 @@ class ArticleThumbnailAPIHandler {
 
         val whiteSpaceEncodedURLSearchString = URLEncoder.encode(articleName, "UTF-8").replace("+", "%20")
 
-        return "https://de.wikipedia.org/w/api.php?action=query&formatversion=2&prop=pageimages%7Cpageterms&titles=${whiteSpaceEncodedURLSearchString}&format=json&pithumbsize=500"
+        return "https://${(currentWikiLanguage.toString().lowercase())}.wikipedia.org/w/api.php?action=query&formatversion=2&prop=pageimages%7Cpageterms&titles=${whiteSpaceEncodedURLSearchString}&format=json&pithumbsize=500"
     }
 
     fun getWikipediaArticleThumbnailURL(

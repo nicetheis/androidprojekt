@@ -19,15 +19,6 @@ import android.net.ConnectivityManager
 import android.text.TextUtils
 import android.widget.Toast
 
-
-
-
-
-
-
-
-
-
 private lateinit var binding: ActivityInitBinding
 
 class InitActivity : AppCompatActivity() {
