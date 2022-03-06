@@ -1,7 +1,5 @@
 package de.dhbw.wikigame.api.wikimedia.datatypes
 
-import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
-
 class WikimediaItem {
 
     var project: String? = null

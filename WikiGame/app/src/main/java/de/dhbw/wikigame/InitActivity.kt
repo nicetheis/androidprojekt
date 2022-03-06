@@ -1,19 +1,24 @@
 package de.dhbw.wikigame
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import de.dhbw.wikigame.databinding.ActivityInitBinding
-import android.widget.*
+import android.widget.RadioButton
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
+import de.dhbw.wikigame.databinding.ActivityInitBinding
 
 private lateinit var binding: ActivityInitBinding
 
 class InitActivity : AppCompatActivity() {
+
+    override fun onBackPressed() {
+        // prevent back button pressing
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

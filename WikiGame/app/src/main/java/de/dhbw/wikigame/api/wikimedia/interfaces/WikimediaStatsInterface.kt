@@ -1,16 +1,11 @@
 package de.dhbw.wikigame.api.wikimedia.interfaces
 
-import androidx.room.Entity
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaData
-import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 import kotlin.random.Random
-import java.io.Serializable
 
 
 class WikimediaStatsInterface(

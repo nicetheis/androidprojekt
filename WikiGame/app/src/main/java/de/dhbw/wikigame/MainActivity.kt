@@ -1,24 +1,21 @@
 package de.dhbw.wikigame
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
-import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
-import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
-import android.net.ConnectivityManager
-import java.lang.Exception
-import java.net.InetAddress
-import java.net.UnknownHostException
+import de.dhbw.wikigame.util.InternetUtil
 
 class MainActivity : AppCompatActivity() {
+
+    override fun onBackPressed() {
+        // prevent back button pressing
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +48,21 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, InitActivity::class.java)
             startActivity(intent)
         }
+
+        val mainHandler = Handler(Looper.getMainLooper())
+
+        mainHandler.post(object: Runnable {
+            override fun run() {
+                if(!InternetUtil.isInternetAvailable(applicationContext)) {
+                    val intent = Intent(applicationContext, InternetWarningActivity::class.java)
+                    if(!InternetWarningActivity.isActive) {
+                        startActivity(intent)
+                    }
+                }
+                mainHandler.postDelayed(this, 1000)
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

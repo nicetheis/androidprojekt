@@ -1,12 +1,12 @@
 package de.dhbw.wikigame
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,8 +15,6 @@ import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
 import de.dhbw.wikigame.databinding.ActivityHigherLowerBinding
-import java.lang.Exception
-import java.net.InetAddress
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -34,6 +32,10 @@ private var isGameOver = false
 private var currentWikiLanguage = ""
 
 class HigherLowerActivity : AppCompatActivity() {
+
+    override fun onBackPressed() {
+        // prevent back button pressing
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

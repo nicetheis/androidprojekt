@@ -1,7 +1,6 @@
 package de.dhbw.wikigame
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,13 +28,15 @@ private lateinit var scoreDao: HighscoreDao
 
 
 class GameOverActivity : AppCompatActivity() {
+
+    override fun onBackPressed() {
+        // prevent back button pressing
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-
 
         binding.tvDBEmpty.isVisible = false
         binding.tvDelete.isVisible = false
