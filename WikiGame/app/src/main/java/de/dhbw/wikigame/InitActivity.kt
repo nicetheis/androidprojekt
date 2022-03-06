@@ -29,8 +29,6 @@ class InitActivity : AppCompatActivity() {
         binding = ActivityInitBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        isInternetAvailable()
-
         val currentWikiLanguage = WikipediaLanguage.DE
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
             MostViewedArticlesAPIHandler(currentWikiLanguage)
@@ -41,11 +39,11 @@ class InitActivity : AppCompatActivity() {
         val letName = sharedPref.getString("name", null)
         val lswDif = sharedPref.getBoolean("difficulty", false)
         val lswTime = sharedPref.getBoolean("time", false)
-        val lrbCountry = sharedPref.getInt("country", 1)
+        val lrbCountry = sharedPref.getString("country", WikipediaLanguage.DE.toString())
 
-        if (lrbCountry == 2) {
+        if (lrbCountry.equals(WikipediaLanguage.FR.toString())) {
             binding.radioGroupCountry.check(R.id.radioButtonCountryFrance)
-        } else if (lrbCountry == 3) {
+        } else if (lrbCountry.equals(WikipediaLanguage.EN.toString())) {
             binding.radioGroupCountry.check(R.id.radioButtonCountryUK)
         } else {
             binding.radioGroupCountry.check(R.id.radioButtonCountryGermany)
@@ -64,7 +62,6 @@ class InitActivity : AppCompatActivity() {
                 putString("name", etName)
                 putBoolean("difficulty", swDif)
                 putBoolean("time", swTime)
-                //putInt("country", rbCountryCounter)
                 apply()
             }
 
@@ -110,7 +107,7 @@ class InitActivity : AppCompatActivity() {
                         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
                         val editor = sharedPref.edit()
                         editor.apply {
-                            putInt("country", 1)
+                            putString("country", WikipediaLanguage.DE.toString())
                             apply()
                         }
                     }
@@ -120,7 +117,7 @@ class InitActivity : AppCompatActivity() {
                             val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
                             val editor = sharedPref.edit()
                             editor.apply {
-                                putInt("country", 2)
+                                putString("country", WikipediaLanguage.FR.toString())
                                 apply()
                             }
                         }
@@ -131,21 +128,12 @@ class InitActivity : AppCompatActivity() {
                             val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
                             val editor = sharedPref.edit()
                             editor.apply {
-                                putInt("country", 3)
+                                putString("country", WikipediaLanguage.EN.toString())
                                 apply()
                             }
                         }
                     }
             }
-        }
-    }
-
-    fun isInternetAvailable(): Boolean {
-        return try {
-            val ipAddr: InetAddress = InetAddress.getByName("google.com")
-            !ipAddr.equals("")
-        } catch (e: Exception) {
-            false
         }
     }
 }

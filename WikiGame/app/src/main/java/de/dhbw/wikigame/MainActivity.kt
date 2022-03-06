@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         
         val currentWikiLanguage = WikipediaLanguage.DE;
-        isInternetAvailable()
 
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
             MostViewedArticlesAPIHandler(currentWikiLanguage)
@@ -61,14 +60,5 @@ class MainActivity : AppCompatActivity() {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
         return true
-    }
-
-    fun isInternetAvailable(): Boolean {
-        return try {
-            val ipAddr: InetAddress = InetAddress.getByName("google.com")
-            !ipAddr.equals("")
-        } catch (e: Exception) {
-            false
-        }
     }
 }

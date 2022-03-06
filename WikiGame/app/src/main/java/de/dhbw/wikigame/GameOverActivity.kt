@@ -37,8 +37,6 @@ class GameOverActivity : AppCompatActivity() {
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        isInternetAvailable()
-
         val currentWikiLanguage = WikipediaLanguage.DE
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
         MostViewedArticlesAPIHandler(currentWikiLanguage)
@@ -166,14 +164,5 @@ class GameOverActivity : AppCompatActivity() {
             binding.rvScores.isVisible = true
         }
         scoreAdapter.notifyDataSetChanged()
-    }
-
-    fun isInternetAvailable(): Boolean {
-        return try {
-            val ipAddr: InetAddress = InetAddress.getByName("google.com")
-            !ipAddr.equals("")
-        } catch (e: Exception) {
-            false
-        }
     }
 }

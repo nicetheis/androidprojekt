@@ -42,8 +42,6 @@ class HigherLowerActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(HigherLowerActivityViewModel::class.java)
 
-        isInternetAvailable()
-
         //set initial values
         score = 0
         timerLiveData = MutableLiveData(6)
@@ -212,15 +210,6 @@ class HigherLowerActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    fun isInternetAvailable(): Boolean {
-        return try {
-            val ipAddr: InetAddress = InetAddress.getByName("google.com")
-            !ipAddr.equals("")
-        } catch (e: Exception) {
-            false
         }
     }
 }
