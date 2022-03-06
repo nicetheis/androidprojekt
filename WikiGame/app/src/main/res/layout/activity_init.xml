@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:text="Aus"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineMiddle"
         app:layout_constraintEnd_toStartOf="@+id/switchTime"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:text="An"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineMiddle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/switchTime"
@@ -95,7 +95,7 @@
         android:id="@+id/switchTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineMiddle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -152,12 +152,70 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.7" />
+
+    <TextView
+        android:id="@+id/textViewCountry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wähle ein Land aus:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroupCountry"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineMiddle" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupCountry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineMiddle">
+
+        <RadioButton
+            android:id="@+id/radioButtonCountryGermany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deutschland"
+            android:checked="true"
+            android:onClick="onRadioButtonClicked"
+            android:layout_weight="0.3" />
+
+        <RadioButton
+            android:id="@+id/radioButtonCountryFrance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frankreich"
+            android:onClick="onRadioButtonClicked"
+            android:layout_weight="0.3" />
+
+        <RadioButton
+            android:id="@+id/radioButtonCountryUK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Großbritannien"
+            android:onClick="onRadioButtonClicked"
+            android:layout_weight="0.3" />
+
+    </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
