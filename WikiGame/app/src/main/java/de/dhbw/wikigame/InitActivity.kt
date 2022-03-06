@@ -19,6 +19,8 @@ import android.net.ConnectivityManager
 import android.text.TextUtils
 import android.widget.Toast
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
+import java.lang.Exception
+import java.net.InetAddress
 
 
 private lateinit var binding: ActivityInitBinding
@@ -29,6 +31,8 @@ class InitActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityInitBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        isInternetAvailable()
 
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
             MostViewedArticlesAPIHandler()
@@ -86,6 +90,15 @@ class InitActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
         }
     }
 }

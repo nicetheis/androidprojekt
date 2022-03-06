@@ -15,6 +15,8 @@ import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
 import de.dhbw.wikigame.databinding.ActivityHigherLowerBinding
+import java.lang.Exception
+import java.net.InetAddress
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -37,6 +39,8 @@ class HigherLowerActivity : AppCompatActivity() {
         binding = ActivityHigherLowerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(HigherLowerActivityViewModel::class.java)
+
+        isInternetAvailable()
 
         //set initial values
         score = 0
@@ -204,6 +208,15 @@ class HigherLowerActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
         }
     }
 }

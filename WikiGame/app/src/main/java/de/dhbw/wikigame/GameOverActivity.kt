@@ -20,6 +20,8 @@ import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreAdapter
 import de.dhbw.wikigame.highscore.HighscoreDao
 import okhttp3.internal.notify
+import java.lang.Exception
+import java.net.InetAddress
 
 private lateinit var binding: ActivityGameOverBinding
 private val scoreList: MutableList<Highscore> = mutableListOf()
@@ -33,6 +35,8 @@ class GameOverActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        isInternetAvailable()
 
 
         val mostViewedArticlesAPIHandler = MostViewedArticlesAPIHandler()
@@ -161,4 +165,12 @@ class GameOverActivity : AppCompatActivity() {
         scoreAdapter.notifyDataSetChanged()
     }
 
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
