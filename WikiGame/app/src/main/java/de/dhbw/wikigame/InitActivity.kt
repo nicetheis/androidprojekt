@@ -10,15 +10,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import de.dhbw.wikigame.databinding.ActivityInitBinding
 import android.net.ConnectivityManager
 
 import android.text.TextUtils
-import android.widget.Toast
+import android.widget.*
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
+import de.dhbw.wikigame.util.WikipediaLanguage
 import java.lang.Exception
 import java.net.InetAddress
 
@@ -33,15 +31,25 @@ class InitActivity : AppCompatActivity() {
 
         isInternetAvailable()
 
+        val currentWikiLanguage = WikipediaLanguage.DE
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler()
+            MostViewedArticlesAPIHandler(currentWikiLanguage)
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
-
+        
         val letName = sharedPref.getString("name", null)
         val lswDif = sharedPref.getBoolean("difficulty", false)
         val lswTime = sharedPref.getBoolean("time", false)
+        val lrbCountry = sharedPref.getInt("country", 1)
+
+        if (lrbCountry == 2) {
+            binding.radioGroupCountry.check(R.id.radioButtonCountryFrance)
+        } else if (lrbCountry == 3) {
+            binding.radioGroupCountry.check(R.id.radioButtonCountryUK)
+        } else {
+            binding.radioGroupCountry.check(R.id.radioButtonCountryGermany)
+        }
 
         binding.editTextPlayerName.setText(letName)
         binding.switchDifficulty.isChecked = lswDif
@@ -56,6 +64,7 @@ class InitActivity : AppCompatActivity() {
                 putString("name", etName)
                 putBoolean("difficulty", swDif)
                 putBoolean("time", swTime)
+                //putInt("country", rbCountryCounter)
                 apply()
             }
 
@@ -89,6 +98,45 @@ class InitActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun onRadioButtonClicked(view: View) {
+        if (view is RadioButton) {
+            val checked = view.isChecked
+            when (view.getId()) {
+                R.id.radioButtonCountryGermany ->
+                    if (checked) {
+                        val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
+                        val editor = sharedPref.edit()
+                        editor.apply {
+                            putInt("country", 1)
+                            apply()
+                        }
+                    }
+                R.id.radioButtonCountryFrance ->
+                    if (checked) {
+                        if (checked) {
+                            val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
+                            val editor = sharedPref.edit()
+                            editor.apply {
+                                putInt("country", 2)
+                                apply()
+                            }
+                        }
+                    }
+                R.id.radioButtonCountryUK ->
+                    if (checked) {
+                        if (checked) {
+                            val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
+                            val editor = sharedPref.edit()
+                            editor.apply {
+                                putInt("country", 3)
+                                apply()
+                            }
+                        }
+                    }
+            }
         }
     }
 
