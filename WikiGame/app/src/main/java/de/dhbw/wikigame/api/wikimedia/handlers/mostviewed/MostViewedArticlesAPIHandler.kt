@@ -1,19 +1,22 @@
 package de.dhbw.wikigame.api.wikimedia.handlers.mostviewed
 
+import android.util.Log
+import de.dhbw.wikigame.api.wikimedia.interfaces.MostViewedArticlesJSONStorage
 import de.dhbw.wikigame.util.WikimediaDateUtil
 import okhttp3.*
 import java.io.IOException
 
-class MostViewedArticlesAPIHandler(val currentWikiLanguage: String) {
+class MostViewedArticlesAPIHandler() {
 
     private val httpClient = OkHttpClient()
-    private var mostViewedArticlesJSONString: String? = null
 
     init {
-        getMostViewedArticles()
+        fetchMostViewedArticles("de")
+        fetchMostViewedArticles("en")
+        fetchMostViewedArticles("fr")
     }
 
-    private fun getMostViewedArticlesRequestURL(): String {
+    private fun getMostViewedArticlesRequestURL(currentWikiLanguage: String): String {
 
         val getRequestDatePattern = WikimediaDateUtil().getGETRequestFormattedDatePattern()
         val wikimediaBaseURL =
@@ -22,13 +25,9 @@ class MostViewedArticlesAPIHandler(val currentWikiLanguage: String) {
 
     }
 
-    fun getMostViewedArticlesJSONString(): String {
-        return mostViewedArticlesJSONString!!
-    }
+    private fun fetchMostViewedArticles(languageString: String) {
 
-    private fun getMostViewedArticles() {
-
-        val requestURL = getMostViewedArticlesRequestURL()
+        val requestURL = getMostViewedArticlesRequestURL(languageString)
         val articleRequest = Request.Builder()
             .url(requestURL)
             .header("Accept", "application/json").build()
@@ -46,8 +45,12 @@ class MostViewedArticlesAPIHandler(val currentWikiLanguage: String) {
 
                     val responseBody: ResponseBody = response.body!!
                     val responseBodyContent: String = responseBody.string()
-                    mostViewedArticlesJSONString = responseBodyContent
-
+                    MostViewedArticlesJSONStorage.mostViewedArticlesJSONStrings.put(
+                        languageString,
+                        responseBodyContent
+                    )
+                    Log.d("DEBUG", "Successfully put json string array for lanugage $languageString")
+                    Log.d("DEBUG", "String for $languageString: ${MostViewedArticlesJSONStorage.mostViewedArticlesJSONStrings[languageString]!!}}")
                 }
             }
 

@@ -1,35 +1,58 @@
 package de.dhbw.wikigame.api.wikimedia.interfaces
 
+import android.util.Log
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaData
+import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 import kotlin.random.Random
 
 
-class WikimediaStatsInterface(
-    mostViewedArticlesJSONString: String,
-    wikipediaArticlesShownJSONString: String
-) {
+class WikimediaStatsInterface {
 
-    private var wikimediaDataInstance: WikimediaData? = null
-    private var wikipediaArticlesShown: List<WikimediaArticleStatistics>? = null
+    private var wikimediaDataInstanceMap: HashMap<String, WikimediaData>? = null
 
     init {
+
+        wikimediaDataInstanceMap = hashMapOf<String, WikimediaData>()
 
         val moshiInstance: Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val jsonAdapterWikimediaData: JsonAdapter<WikimediaData> =
             moshiInstance.adapter(WikimediaData::class.java)
-        this.wikimediaDataInstance = jsonAdapterWikimediaData.fromJson(mostViewedArticlesJSONString)
-        this.wikipediaArticlesShown = listOf()
+        // DE
+        val jsonStringDE = MostViewedArticlesJSONStorage.mostViewedArticlesJSONStrings.get("de")
+        if(jsonStringDE == null) Log.d("DEBUG", "jsonStringDE IS NULL")
+        this.wikimediaDataInstanceMap!!["de"] =
+            jsonAdapterWikimediaData.fromJson(jsonStringDE)!!
+        // FR
+        val jsonStringFR = MostViewedArticlesJSONStorage.mostViewedArticlesJSONStrings.get("fr")
+        if(jsonStringFR == null) Log.d("DEBUG", "jsonStringFR IS NULL")
+        this.wikimediaDataInstanceMap!!["fr"] =
+            jsonAdapterWikimediaData.fromJson(jsonStringFR)!!
+        // EN
+        val jsonStringEN = MostViewedArticlesJSONStorage.mostViewedArticlesJSONStrings.get("en")
+        if(jsonStringEN == null) Log.d("DEBUG", "jsonStringEN IS NULL")
+        this.wikimediaDataInstanceMap!!["en"] =
+            jsonAdapterWikimediaData.fromJson(jsonStringEN)!!
 
     }
 
-    fun getRandomWikiArticle(): WikimediaArticleStatistics? {
+    private fun formatToMostViewedJSONString(currentWikiLanguage: String): String {
+        val moshiInstance: Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val jsonAdapterWikimediaData: JsonAdapter<WikimediaData> =
+            moshiInstance.adapter(WikimediaData::class.java)
+        return jsonAdapterWikimediaData.toJson(wikimediaDataInstanceMap!![currentWikiLanguage]!!)
 
-        val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null
-        var mutableArticleList: MutableList<WikimediaArticleStatistics> = wikipediaArticleList.toMutableList()
+    }
+
+    fun getRandomWikiArticle(currentWikiLanguage: String): WikimediaArticleStatistics? {
+
+        val wikipediaArticleList =
+            wikimediaDataInstanceMap!![currentWikiLanguage]!!.items!![0].articles ?: return null
+        var mutableArticleList: MutableList<WikimediaArticleStatistics> =
+            wikipediaArticleList.toMutableList()
         println("mutableArticleList size before removal: ${mutableArticleList.size}")
         mutableArticleList = mutableArticleList.drop(2).toMutableList()
         println("mutableArticleList size after removal: ${mutableArticleList.size}")
@@ -40,21 +63,30 @@ class WikimediaStatsInterface(
         while (!itemFound) {
             val randomIndex = Random.nextInt(mutableArticleList!!.size)
             val currentRandomArticle = mutableArticleList[randomIndex]
-            if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
-                itemFound = true
-                randomArticleFound = currentRandomArticle
-                wikipediaArticlesShown!!.plus(randomArticleFound)
-            }
+            itemFound = true
+            randomArticleFound = currentRandomArticle
+            mutableArticleList.remove(currentRandomArticle)
+            wikimediaDataInstanceMap!![currentWikiLanguage]!!.items!![0].articles =
+                mutableArticleList.toTypedArray()
+            MostViewedArticlesJSONStorage.mostViewedArticlesJSONStrings.set(
+                currentWikiLanguage,
+                formatToMostViewedJSONString(currentWikiLanguage)
+            )
         }
 
         return randomArticleFound
 
     }
 
-    fun getRandomWikiArticleUpperBound(): WikimediaArticleStatistics? {
+    fun getRandomWikiArticle(
+        currentWikiLanguage: String,
+        articleBound: WikimediaArticleBound
+    ): WikimediaArticleStatistics? {
 
-        val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null;
-        var mutableArticleList: MutableList<WikimediaArticleStatistics> = wikipediaArticleList.toMutableList()
+        val wikipediaArticleList =
+            wikimediaDataInstanceMap!![currentWikiLanguage]!!.items!![0].articles ?: return null
+        var mutableArticleList: MutableList<WikimediaArticleStatistics> =
+            wikipediaArticleList.toMutableList()
         println("mutableArticleList size before removal: ${mutableArticleList.size}")
         mutableArticleList = mutableArticleList.drop(2).toMutableList()
         println("mutableArticleList size after removal: ${mutableArticleList.size}")
@@ -63,43 +95,26 @@ class WikimediaStatsInterface(
         var randomArticleFound: WikimediaArticleStatistics? = null
 
         while (!itemFound) {
-            val randomIndex = Random.nextInt(500, 999)
-            val currentRandomArticle = mutableArticleList[randomIndex]
-            if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
-                itemFound = true
-                randomArticleFound = currentRandomArticle
-                wikipediaArticlesShown!!.plus(randomArticleFound)
+            var randomIndex = 0
+            if (articleBound == WikimediaArticleBound.UPPER) {
+                randomIndex = Random.nextInt(500, 999)
+            } else if (articleBound == WikimediaArticleBound.LOWER) {
+                randomIndex = Random.nextInt(0, 499)
             }
+            val currentRandomArticle = mutableArticleList[randomIndex]
+            itemFound = true
+            randomArticleFound = currentRandomArticle
+            mutableArticleList.remove(currentRandomArticle)
+            wikimediaDataInstanceMap!![currentWikiLanguage]!!.items!![0].articles =
+                mutableArticleList.toTypedArray()
+            MostViewedArticlesJSONStorage.mostViewedArticlesJSONStrings.set(
+                currentWikiLanguage,
+                formatToMostViewedJSONString(currentWikiLanguage)
+            )
         }
 
         return randomArticleFound
 
     }
-
-    fun getRandomWikiArticleLowerBound(): WikimediaArticleStatistics? {
-
-        val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null;
-        var mutableArticleList: MutableList<WikimediaArticleStatistics> = wikipediaArticleList.toMutableList()
-        println("mutableArticleList size before removal: ${mutableArticleList.size}")
-        mutableArticleList = mutableArticleList.drop(2).toMutableList()
-        println("mutableArticleList size after removal: ${mutableArticleList.size}")
-
-        var itemFound = false
-        var randomArticleFound: WikimediaArticleStatistics? = null
-
-        while (!itemFound) {
-            val randomIndex = Random.nextInt(0, 499)
-            val currentRandomArticle = mutableArticleList[randomIndex]
-            if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
-                itemFound = true
-                randomArticleFound = currentRandomArticle
-                wikipediaArticlesShown!!.plus(randomArticleFound)
-            }
-        }
-
-        return randomArticleFound
-
-    }
-
 
 }

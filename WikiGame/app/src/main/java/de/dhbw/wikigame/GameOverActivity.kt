@@ -53,9 +53,6 @@ class GameOverActivity : AppCompatActivity() {
         val country = sharedPref.getString("country", "de")!!
         val scoreToInsert = Highscore(name!!, score, time, difficulty, country)
 
-        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler(country)
-
         //Datenbank stuff
         db = Room.databaseBuilder(this, Database::class.java, "highscores")
             .allowMainThreadQueries()
@@ -83,10 +80,6 @@ class GameOverActivity : AppCompatActivity() {
         //RestartButton
         binding.btnRestart.setOnClickListener {
             val intent = Intent(this, HigherLowerActivity::class.java)
-            intent.putExtra(
-                "mostViewedArticlesJSONString",
-                mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
-            )
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
@@ -117,7 +110,7 @@ class GameOverActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.icHome -> {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, InitActivity::class.java)
                 //Flag: Geht zur MainActivity, löscht andere Stack seiten
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)

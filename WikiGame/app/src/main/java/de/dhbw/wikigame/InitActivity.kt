@@ -25,8 +25,6 @@ class InitActivity : AppCompatActivity() {
         binding = ActivityInitBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
         
@@ -34,9 +32,6 @@ class InitActivity : AppCompatActivity() {
         val lswDif = sharedPref.getBoolean("difficulty", false)
         val lswTime = sharedPref.getBoolean("time", false)
         val lrbCountry: String = sharedPref.getString("country", "de")!!
-
-        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler(lrbCountry)
 
         if (lrbCountry == "fr") {
             binding.radioGroupCountry.check(R.id.radioButtonCountryFrance)
@@ -66,10 +61,6 @@ class InitActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Bitte gib deinen Namen ein", Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(this, HigherLowerActivity::class.java)
-                intent.putExtra(
-                    "mostViewedArticlesJSONString",
-                    mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
-                )
                 startActivity(intent)
             }
         }
@@ -81,18 +72,6 @@ class InitActivity : AppCompatActivity() {
         inflater.inflate(R.menu.menu, menu)
         menu.findItem(R.id.icHome).setVisible(true)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.icHome -> {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     fun onRadioButtonClicked(view: View) {

@@ -9,7 +9,10 @@ import android.view.MenuInflater
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
+import de.dhbw.wikigame.api.wikimedia.interfaces.MostViewedArticlesJSONStorage
 import de.dhbw.wikigame.util.InternetUtil
+import java.util.*
+import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,31 +24,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         
-
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler("de")
+            MostViewedArticlesAPIHandler()
 
-
-        val button1 = findViewById<Button>(R.id.btnTestHigherLower)
-        val button2 = findViewById<Button>(R.id.btnTestGameOverScreen)
-        val button3 = findViewById<Button>(R.id.btnTestInit)
-
-        button1.setOnClickListener {
-            val intent = Intent(this, HigherLowerActivity::class.java)
-            intent.putExtra(
-                "mostViewedArticlesJSONString",
-                mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
-            )
-            startActivity(intent)
-        }
-
-        button2.setOnClickListener {
-            val intent = Intent(this, GameOverActivity::class.java)
-            startActivity(intent)
-        }
-
-        button3.setOnClickListener {
-            val intent = Intent(this, InitActivity::class.java)
+        Timer("WaitTimer", false).schedule(3000) {
+            val intent = Intent(applicationContext, InitActivity::class.java)
             startActivity(intent)
         }
 

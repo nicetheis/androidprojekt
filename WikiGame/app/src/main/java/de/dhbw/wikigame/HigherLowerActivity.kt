@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
+import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaArticleBound
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
 import de.dhbw.wikigame.databinding.ActivityHigherLowerBinding
@@ -56,17 +57,15 @@ class HigherLowerActivity : AppCompatActivity() {
         currentWikiLanguage = sharedPref.getString("country", "de")!!
 
         //get data from wikipedia api
-        val mostViewedArticlesJSONString: String =
-            intent.getStringExtra("mostViewedArticlesJSONString")!!
-        wikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
+        wikimediaStatsInterface = WikimediaStatsInterface()
 
         //initialize game with first two articles
         if (isHighDifficulty) {
-            article1 = (wikimediaStatsInterface.getRandomWikiArticle())!!
-            article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+            article1 = (wikimediaStatsInterface.getRandomWikiArticle(currentWikiLanguage))!!
+            article2 = (wikimediaStatsInterface.getRandomWikiArticle(currentWikiLanguage))!!
         } else {
-            article1 = (wikimediaStatsInterface.getRandomWikiArticleUpperBound())!!
-            article2 = (wikimediaStatsInterface.getRandomWikiArticleLowerBound())!!
+            article1 = (wikimediaStatsInterface.getRandomWikiArticle(currentWikiLanguage, WikimediaArticleBound.UPPER))!!
+            article2 = (wikimediaStatsInterface.getRandomWikiArticle(currentWikiLanguage, WikimediaArticleBound.LOWER))!!
         }
 
         loadArticlesToView(article1, article2)
@@ -124,12 +123,12 @@ class HigherLowerActivity : AppCompatActivity() {
     fun showNewArticles() {
         article1 = article2
         if (isHighDifficulty) {
-            article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
+            article2 = (wikimediaStatsInterface.getRandomWikiArticle(currentWikiLanguage))!!
         } else {
             if (isUpperBound) {
-                article2 = (wikimediaStatsInterface.getRandomWikiArticleUpperBound())!!
+                article2 = (wikimediaStatsInterface.getRandomWikiArticle(currentWikiLanguage, WikimediaArticleBound.UPPER))!!
             } else {
-                article2 = (wikimediaStatsInterface.getRandomWikiArticleLowerBound())!!
+                article2 = (wikimediaStatsInterface.getRandomWikiArticle(currentWikiLanguage, WikimediaArticleBound.LOWER))!!
             }
         }
         loadArticlesToView(article1, article2)
@@ -204,7 +203,7 @@ class HigherLowerActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.icHome -> {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, InitActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
                 true
