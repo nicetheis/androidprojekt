@@ -1,5 +1,6 @@
 package de.dhbw.wikigame
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -12,15 +13,23 @@ import android.widget.Button
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
+import de.dhbw.wikigame.util.WikipediaLanguage
+import android.net.ConnectivityManager
+import java.lang.Exception
+import java.net.InetAddress
+import java.net.UnknownHostException
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        
+        val currentWikiLanguage = WikipediaLanguage.DE;
+        isInternetAvailable()
 
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler()
+            MostViewedArticlesAPIHandler(currentWikiLanguage)
 
 
         val button1 = findViewById<Button>(R.id.btnTestHigherLower)
@@ -33,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 "mostViewedArticlesJSONString",
                 mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
             )
+            intent.putExtra("currentWikiLanguage", currentWikiLanguage);
             startActivity(intent)
         }
 
@@ -51,5 +61,14 @@ class MainActivity : AppCompatActivity() {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
         return true
+    }
+
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
+        }
     }
 }

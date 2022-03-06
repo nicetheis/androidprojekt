@@ -7,11 +7,12 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaData
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.util.WikimediaDateUtil
+import de.dhbw.wikigame.util.WikipediaLanguage
 import okhttp3.*
 import java.io.IOException
 import java.io.Serializable
 
-class MostViewedArticlesAPIHandler {
+class MostViewedArticlesAPIHandler(val currentWikiLanguage: WikipediaLanguage) {
 
     private val httpClient = OkHttpClient()
     private var mostViewedArticlesJSONString: String? = null
@@ -24,7 +25,7 @@ class MostViewedArticlesAPIHandler {
 
         val getRequestDatePattern = WikimediaDateUtil().getGETRequestFormattedDatePattern()
         val wikimediaBaseURL =
-            "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/de.wikipedia/all-access/"
+            "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/${(currentWikiLanguage.toString().lowercase())}.wikipedia/all-access/"
         return wikimediaBaseURL + getRequestDatePattern
 
     }

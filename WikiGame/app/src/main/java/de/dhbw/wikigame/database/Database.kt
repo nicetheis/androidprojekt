@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreDao
 
-@Database(entities = [Highscore::class], version = 2)
+@Database(entities = [Highscore::class], version = 3)
 abstract class Database : RoomDatabase() {
     abstract fun getHighscoreDao(): HighscoreDao
 }

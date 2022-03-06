@@ -16,7 +16,9 @@ import android.net.ConnectivityManager
 import android.text.TextUtils
 import android.widget.*
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
-
+import de.dhbw.wikigame.util.WikipediaLanguage
+import java.lang.Exception
+import java.net.InetAddress
 
 private lateinit var binding: ActivityInitBinding
 
@@ -27,8 +29,11 @@ class InitActivity : AppCompatActivity() {
         binding = ActivityInitBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        isInternetAvailable()
+
+        val currentWikiLanguage = WikipediaLanguage.DE
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler()
+            MostViewedArticlesAPIHandler(currentWikiLanguage)
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
@@ -135,4 +140,12 @@ class InitActivity : AppCompatActivity() {
         }
     }
 
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
