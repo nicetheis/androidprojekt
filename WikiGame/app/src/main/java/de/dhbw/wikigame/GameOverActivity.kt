@@ -53,7 +53,8 @@ class GameOverActivity : AppCompatActivity() {
         val name = sharedPref.getString("name", "player")
         val time = sharedPref.getBoolean("time", false)
         val difficulty = sharedPref.getBoolean("difficulty", false)
-        val scoreToInsert = Highscore(name!!, score, time, difficulty)
+        val country = "de"
+        val scoreToInsert = Highscore(name!!, score, time, difficulty, country)
 
         //Datenbank stuff
         db = Room.databaseBuilder(this, Database::class.java, "highscores")
