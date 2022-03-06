@@ -33,9 +33,6 @@ class GameOverActivity : AppCompatActivity() {
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-
         binding.tvDBEmpty.isVisible = false
         binding.tvDelete.isVisible = false
         binding.tvNotPlayed.isVisible = false
@@ -48,7 +45,7 @@ class GameOverActivity : AppCompatActivity() {
         val name = sharedPref.getString("name", "player")
         val time = sharedPref.getBoolean("time", false)
         val difficulty = sharedPref.getBoolean("difficulty", false)
-        val country = "de"
+        val country = sharedPref.getString("country", "de")!!
         val scoreToInsert = Highscore(name!!, score, time, difficulty, country)
 
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
