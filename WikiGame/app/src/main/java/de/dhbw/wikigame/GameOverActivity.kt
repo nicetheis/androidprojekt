@@ -13,12 +13,15 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
 import de.dhbw.wikigame.database.Database
 import de.dhbw.wikigame.databinding.ActivityGameOverBinding
 import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreAdapter
 import de.dhbw.wikigame.highscore.HighscoreDao
 import okhttp3.internal.notify
+import java.lang.Exception
+import java.net.InetAddress
 
 private lateinit var binding: ActivityGameOverBinding
 private val scoreList: MutableList<Highscore> = mutableListOf()
@@ -33,6 +36,11 @@ class GameOverActivity : AppCompatActivity() {
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        isInternetAvailable()
+
+
+        val mostViewedArticlesAPIHandler = MostViewedArticlesAPIHandler()
+
         binding.tvDBEmpty.isVisible = false
         binding.tvDelete.isVisible = false
         binding.tvNotPlayed.isVisible = false
@@ -45,7 +53,8 @@ class GameOverActivity : AppCompatActivity() {
         val name = sharedPref.getString("name", "player")
         val time = sharedPref.getBoolean("time", false)
         val difficulty = sharedPref.getBoolean("difficulty", false)
-        val scoreToInsert = Highscore(name!!, score, time, difficulty)
+        val country = "de"
+        val scoreToInsert = Highscore(name!!, score, time, difficulty, country)
 
         //Datenbank stuff
         db = Room.databaseBuilder(this, Database::class.java, "highscores")
@@ -74,6 +83,10 @@ class GameOverActivity : AppCompatActivity() {
         //RestartButton
         binding.btnRestart.setOnClickListener {
             val intent = Intent(this, HigherLowerActivity::class.java)
+            intent.putExtra(
+                "mostViewedArticlesJSONString",
+                mostViewedArticlesAPIHandler.getMostViewedArticlesJSONString()
+            )
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
@@ -153,4 +166,12 @@ class GameOverActivity : AppCompatActivity() {
         scoreAdapter.notifyDataSetChanged()
     }
 
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
