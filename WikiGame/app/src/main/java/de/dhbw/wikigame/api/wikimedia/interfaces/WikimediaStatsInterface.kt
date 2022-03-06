@@ -27,27 +27,24 @@ class WikimediaStatsInterface(
         val jsonAdapterWikimediaData: JsonAdapter<WikimediaData> =
             moshiInstance.adapter(WikimediaData::class.java)
         this.wikimediaDataInstance = jsonAdapterWikimediaData.fromJson(mostViewedArticlesJSONString)
-        val parameterizedArticleList =
-            Types.newParameterizedType(List::class.java, WikimediaArticleStatistics::class.java)
-        /*val jsonAdapterArticlesShown: JsonAdapter<List<WikimediaArticleStatistics>> =
-            moshiInstance.adapter(parameterizedArticleList)
-        this.wikipediaArticlesShown =
-            jsonAdapterArticlesShown.fromJson(wikipediaArticlesShownJSONString)*/
-
         this.wikipediaArticlesShown = listOf()
 
     }
 
     fun getRandomWikiArticle(): WikimediaArticleStatistics? {
 
-        val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null;
+        val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null
+        var mutableArticleList: MutableList<WikimediaArticleStatistics> = wikipediaArticleList.toMutableList()
+        println("mutableArticleList size before removal: ${mutableArticleList.size}")
+        mutableArticleList = mutableArticleList.drop(2).toMutableList()
+        println("mutableArticleList size after removal: ${mutableArticleList.size}")
 
         var itemFound = false
         var randomArticleFound: WikimediaArticleStatistics? = null
 
         while (!itemFound) {
-            val randomIndex = Random.nextInt(wikipediaArticleList!!.size)
-            val currentRandomArticle = wikipediaArticleList[randomIndex]
+            val randomIndex = Random.nextInt(mutableArticleList!!.size)
+            val currentRandomArticle = mutableArticleList[randomIndex]
             if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
                 itemFound = true
                 randomArticleFound = currentRandomArticle
@@ -62,13 +59,17 @@ class WikimediaStatsInterface(
     fun getRandomWikiArticleUpperBound(): WikimediaArticleStatistics? {
 
         val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null;
+        var mutableArticleList: MutableList<WikimediaArticleStatistics> = wikipediaArticleList.toMutableList()
+        println("mutableArticleList size before removal: ${mutableArticleList.size}")
+        mutableArticleList = mutableArticleList.drop(2).toMutableList()
+        println("mutableArticleList size after removal: ${mutableArticleList.size}")
 
         var itemFound = false
         var randomArticleFound: WikimediaArticleStatistics? = null
 
         while (!itemFound) {
             val randomIndex = Random.nextInt(500, 999)
-            val currentRandomArticle = wikipediaArticleList[randomIndex]
+            val currentRandomArticle = mutableArticleList[randomIndex]
             if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
                 itemFound = true
                 randomArticleFound = currentRandomArticle
@@ -83,13 +84,17 @@ class WikimediaStatsInterface(
     fun getRandomWikiArticleLowerBound(): WikimediaArticleStatistics? {
 
         val wikipediaArticleList = wikimediaDataInstance!!.items!![0].articles ?: return null;
+        var mutableArticleList: MutableList<WikimediaArticleStatistics> = wikipediaArticleList.toMutableList()
+        println("mutableArticleList size before removal: ${mutableArticleList.size}")
+        mutableArticleList = mutableArticleList.drop(2).toMutableList()
+        println("mutableArticleList size after removal: ${mutableArticleList.size}")
 
         var itemFound = false
         var randomArticleFound: WikimediaArticleStatistics? = null
 
         while (!itemFound) {
             val randomIndex = Random.nextInt(0, 499)
-            val currentRandomArticle = wikipediaArticleList[randomIndex]
+            val currentRandomArticle = mutableArticleList[randomIndex]
             if (!wikipediaArticlesShown!!.contains(currentRandomArticle)) {
                 itemFound = true
                 randomArticleFound = currentRandomArticle

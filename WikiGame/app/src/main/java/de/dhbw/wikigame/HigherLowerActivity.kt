@@ -15,6 +15,7 @@ import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
 import de.dhbw.wikigame.databinding.ActivityHigherLowerBinding
+import de.dhbw.wikigame.util.WikipediaLanguage
 import java.lang.Exception
 import java.net.InetAddress
 import java.util.*
@@ -31,6 +32,7 @@ private var isUpperBound = true
 private var score: Int = 0
 private var timerLiveData: MutableLiveData<Int> = MutableLiveData(6)
 private var isGameOver = false
+private var currentWikiLanguage: WikipediaLanguage = WikipediaLanguage.DE
 
 class HigherLowerActivity : AppCompatActivity() {
 
@@ -58,8 +60,10 @@ class HigherLowerActivity : AppCompatActivity() {
             intent.getStringExtra("mostViewedArticlesJSONString")!!
         wikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
 
+        currentWikiLanguage = intent.getSerializableExtra("currentWikiLanguage") as WikipediaLanguage
+
         //initialize game with first two articles
-        if(isHighDifficulty){
+        if (isHighDifficulty) {
             article1 = (wikimediaStatsInterface.getRandomWikiArticle())!!
             article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
         } else {
@@ -95,7 +99,7 @@ class HigherLowerActivity : AppCompatActivity() {
             binding.timerValue.text = timerLiveData.value.toString()
             timerLiveData.observe(this, Observer {
                 binding.timerValue.text = timerLiveData.value.toString()
-                if(!isGameOver && timerLiveData.value!! == 0) {
+                if (!isGameOver && timerLiveData.value!! == 0) {
                     binding.timerValue.visibility = View.INVISIBLE
                     binding.timeIsUp.visibility = View.VISIBLE
                     gameOver()
@@ -121,10 +125,10 @@ class HigherLowerActivity : AppCompatActivity() {
 
     fun showNewArticles() {
         article1 = article2
-        if(isHighDifficulty){
+        if (isHighDifficulty) {
             article2 = (wikimediaStatsInterface.getRandomWikiArticle())!!
         } else {
-            if(isUpperBound){
+            if (isUpperBound) {
                 article2 = (wikimediaStatsInterface.getRandomWikiArticleUpperBound())!!
             } else {
                 article2 = (wikimediaStatsInterface.getRandomWikiArticleLowerBound())!!
@@ -153,7 +157,7 @@ class HigherLowerActivity : AppCompatActivity() {
             binding.lable2.text = article2!!.article.replace("_", " ")
         })
         //handle loading thumbnails
-        val articleThumbnailAPIHandler = ArticleThumbnailAPIHandler()
+        val articleThumbnailAPIHandler = ArticleThumbnailAPIHandler(currentWikiLanguage)
         articleThumbnailAPIHandler.getWikipediaArticleThumbnailURL(
             article1!!.article,
             viewModel.currentFirstArticleThumbnailURL
@@ -183,7 +187,7 @@ class HigherLowerActivity : AppCompatActivity() {
 
     //timed mode
     fun decrementTimer() {
-        if(timerLiveData.value!! > 0) {
+        if (timerLiveData.value!! > 0) {
             timerLiveData.value?.let { value -> timerLiveData.postValue(value - 1) }
             Timer("WaitTimer", false).schedule(1000) {
                 decrementTimer()
