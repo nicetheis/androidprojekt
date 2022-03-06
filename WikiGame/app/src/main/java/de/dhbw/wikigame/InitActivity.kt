@@ -1,24 +1,15 @@
 package de.dhbw.wikigame
 
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
-import android.os.SharedMemory
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import de.dhbw.wikigame.databinding.ActivityInitBinding
-import android.net.ConnectivityManager
-
-import android.text.TextUtils
 import android.widget.*
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
-import de.dhbw.wikigame.util.WikipediaLanguage
-import java.lang.Exception
-import java.net.InetAddress
 
 private lateinit var binding: ActivityInitBinding
 
@@ -29,9 +20,7 @@ class InitActivity : AppCompatActivity() {
         binding = ActivityInitBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val currentWikiLanguage = WikipediaLanguage.DE
-        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler(currentWikiLanguage)
+
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
@@ -39,11 +28,14 @@ class InitActivity : AppCompatActivity() {
         val letName = sharedPref.getString("name", null)
         val lswDif = sharedPref.getBoolean("difficulty", false)
         val lswTime = sharedPref.getBoolean("time", false)
-        val lrbCountry = sharedPref.getString("country", WikipediaLanguage.DE.toString())
+        val lrbCountry: String = sharedPref.getString("country", "de")!!
 
-        if (lrbCountry.equals(WikipediaLanguage.FR.toString())) {
+        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
+            MostViewedArticlesAPIHandler(lrbCountry)
+
+        if (lrbCountry == "fr") {
             binding.radioGroupCountry.check(R.id.radioButtonCountryFrance)
-        } else if (lrbCountry.equals(WikipediaLanguage.EN.toString())) {
+        } else if (lrbCountry == "en") {
             binding.radioGroupCountry.check(R.id.radioButtonCountryUK)
         } else {
             binding.radioGroupCountry.check(R.id.radioButtonCountryGermany)
@@ -107,7 +99,7 @@ class InitActivity : AppCompatActivity() {
                         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
                         val editor = sharedPref.edit()
                         editor.apply {
-                            putString("country", WikipediaLanguage.DE.toString())
+                            putString("country", "de")
                             apply()
                         }
                     }
@@ -117,7 +109,7 @@ class InitActivity : AppCompatActivity() {
                             val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
                             val editor = sharedPref.edit()
                             editor.apply {
-                                putString("country", WikipediaLanguage.FR.toString())
+                                putString("country", "fr")
                                 apply()
                             }
                         }
@@ -128,7 +120,7 @@ class InitActivity : AppCompatActivity() {
                             val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
                             val editor = sharedPref.edit()
                             editor.apply {
-                                putString("country", WikipediaLanguage.EN.toString())
+                                putString("country", "en")
                                 apply()
                             }
                         }

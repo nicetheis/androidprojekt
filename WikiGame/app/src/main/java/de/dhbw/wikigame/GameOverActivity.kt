@@ -19,10 +19,6 @@ import de.dhbw.wikigame.databinding.ActivityGameOverBinding
 import de.dhbw.wikigame.highscore.Highscore
 import de.dhbw.wikigame.highscore.HighscoreAdapter
 import de.dhbw.wikigame.highscore.HighscoreDao
-import de.dhbw.wikigame.util.WikipediaLanguage
-import okhttp3.internal.notify
-import java.lang.Exception
-import java.net.InetAddress
 
 private lateinit var binding: ActivityGameOverBinding
 private val scoreList: MutableList<Highscore> = mutableListOf()
@@ -37,9 +33,8 @@ class GameOverActivity : AppCompatActivity() {
         binding = ActivityGameOverBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val currentWikiLanguage = WikipediaLanguage.DE
-        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-        MostViewedArticlesAPIHandler(currentWikiLanguage)
+
+
 
         binding.tvDBEmpty.isVisible = false
         binding.tvDelete.isVisible = false
@@ -55,6 +50,9 @@ class GameOverActivity : AppCompatActivity() {
         val difficulty = sharedPref.getBoolean("difficulty", false)
         val country = "de"
         val scoreToInsert = Highscore(name!!, score, time, difficulty, country)
+
+        val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
+            MostViewedArticlesAPIHandler(country)
 
         //Datenbank stuff
         db = Room.databaseBuilder(this, Database::class.java, "highscores")

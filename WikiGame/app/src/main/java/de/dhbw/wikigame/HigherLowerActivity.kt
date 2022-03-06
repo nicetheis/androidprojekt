@@ -15,7 +15,6 @@ import de.dhbw.wikigame.api.wikimedia.datatypes.WikimediaArticleStatistics
 import de.dhbw.wikigame.api.wikimedia.interfaces.WikimediaStatsInterface
 import de.dhbw.wikigame.api.wikipedia.handlers.images.ArticleThumbnailAPIHandler
 import de.dhbw.wikigame.databinding.ActivityHigherLowerBinding
-import de.dhbw.wikigame.util.WikipediaLanguage
 import java.lang.Exception
 import java.net.InetAddress
 import java.util.*
@@ -32,7 +31,7 @@ private var isUpperBound = true
 private var score: Int = 0
 private var timerLiveData: MutableLiveData<Int> = MutableLiveData(6)
 private var isGameOver = false
-private var currentWikiLanguage: WikipediaLanguage = WikipediaLanguage.DE
+private var currentWikiLanguage = ""
 
 class HigherLowerActivity : AppCompatActivity() {
 
@@ -52,13 +51,12 @@ class HigherLowerActivity : AppCompatActivity() {
         //timed mode
         isTimeMode = sharedPref.getBoolean("time", false)
         isHighDifficulty = sharedPref.getBoolean("difficulty", false)
+        currentWikiLanguage = sharedPref.getString("country", "de")!!
 
         //get data from wikipedia api
         val mostViewedArticlesJSONString: String =
             intent.getStringExtra("mostViewedArticlesJSONString")!!
         wikimediaStatsInterface = WikimediaStatsInterface(mostViewedArticlesJSONString, "{}")
-
-        currentWikiLanguage = intent.getSerializableExtra("currentWikiLanguage") as WikipediaLanguage
 
         //initialize game with first two articles
         if (isHighDifficulty) {
