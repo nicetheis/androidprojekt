@@ -96,10 +96,12 @@ class WikimediaStatsInterface {
 
         while (!itemFound) {
             var randomIndex = 0
+            var arraySize = mutableArticleList.size
+            var arrayHalf = Math.round((arraySize/2).toDouble()).toInt()
             if (articleBound == WikimediaArticleBound.UPPER) {
-                randomIndex = Random.nextInt(500, 999)
+                randomIndex = Random.nextInt(arrayHalf, arraySize)
             } else if (articleBound == WikimediaArticleBound.LOWER) {
-                randomIndex = Random.nextInt(0, 499)
+                randomIndex = Random.nextInt(0, arrayHalf-1)
             }
             val currentRandomArticle = mutableArticleList[randomIndex]
             itemFound = true
