@@ -22,7 +22,6 @@ import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIH
 import java.lang.Exception
 import java.net.InetAddress
 
-
 private lateinit var binding: ActivityInitBinding
 
 class InitActivity : AppCompatActivity() {
