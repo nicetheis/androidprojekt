@@ -19,6 +19,7 @@ import android.net.ConnectivityManager
 import android.text.TextUtils
 import android.widget.Toast
 import de.dhbw.wikigame.api.wikimedia.handlers.mostviewed.MostViewedArticlesAPIHandler
+import de.dhbw.wikigame.util.WikipediaLanguage
 import java.lang.Exception
 import java.net.InetAddress
 
@@ -33,8 +34,9 @@ class InitActivity : AppCompatActivity() {
 
         isInternetAvailable()
 
+        val currentWikiLanguage = WikipediaLanguage.DE
         val mostViewedArticlesAPIHandler: MostViewedArticlesAPIHandler =
-            MostViewedArticlesAPIHandler()
+            MostViewedArticlesAPIHandler(currentWikiLanguage)
 
         val sharedPref = getSharedPreferences("playerSettings", MODE_PRIVATE)
         val editor = sharedPref.edit()
